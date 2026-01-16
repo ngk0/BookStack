@@ -1,0 +1,14 @@
+[Unit]
+Description=Run BookStack Hierarchy Sync every 30 minutes
+Documentation=file:///srv/stacks/work/bookstack/CLAUDE.md
+
+[Timer]
+# Run at :00 and :30 of every hour
+OnCalendar=*:00,30:00
+# Add up to 60 seconds of randomized delay to prevent thundering herd
+RandomizedDelaySec=60
+# Run missed jobs if system was down
+Persistent=true
+
+[Install]
+WantedBy=timers.target

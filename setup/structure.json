@@ -1,0 +1,313 @@
+{
+  "shelves": [
+    {
+      "name": "Getting Started",
+      "description": "Onboarding hub for new team members - HR, tools, environment setup, and finding your way around",
+      "books": [
+        {
+          "name": "Welcome to EIC",
+          "description": "Introduction to the EIC team and company",
+          "chapters": [
+            {"name": "Team Overview & Structure", "description": "Organization chart, roles, and reporting structure"},
+            {"name": "Who Does What", "description": "Contact directory and areas of responsibility"},
+            {"name": "Company Culture & Values", "description": "How we work together and what we stand for"}
+          ]
+        },
+        {
+          "name": "Non-Technical Onboarding",
+          "description": "Administrative and HR setup for new hires",
+          "chapters": [
+            {"name": "HR & Benefits", "description": "Benefits enrollment, policies, time off"},
+            {"name": "Tools & Access", "description": "Email, VPN, software licenses, badge access"},
+            {"name": "Time Tracking & Expenses", "description": "Timesheet system, expense reporting, mileage"},
+            {"name": "Communication Channels", "description": "Email lists, Teams channels, meeting cadences"}
+          ]
+        },
+        {
+          "name": "Technical Onboarding",
+          "description": "Development environment and technical setup",
+          "chapters": [
+            {"name": "Development Environment Setup", "description": "IDE, version control, local tools"},
+            {"name": "Required Software & Licenses", "description": "AutoCAD, Studio 5000, FactoryTalk, etc."},
+            {"name": "Safety Training Requirements", "description": "Arc flash, OSHA, site-specific certifications"},
+            {"name": "First Week Checklist", "description": "Day-by-day guide for your first week"}
+          ]
+        },
+        {
+          "name": "Where to Find Things",
+          "description": "Navigation guide for shared resources",
+          "chapters": [
+            {"name": "Shared Drive Structure", "description": "P: drive layout and folder organization"},
+            {"name": "Project Folder Conventions", "description": "Standard project folder template"},
+            {"name": "Drawing Archives", "description": "Where to find historical drawings"},
+            {"name": "Software & License Keys", "description": "License server info and software installers"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "EIC Standards Library",
+      "description": "Official engineering standards and procedures for electrical and controls work",
+      "books": [
+        {
+          "name": "Electrical Standards",
+          "description": "Electrical design and installation standards",
+          "chapters": [
+            {"name": "Power Distribution", "description": "MCC, panelboard, and distribution design standards"},
+            {"name": "Motor Control", "description": "VFD, soft starter, and DOL starter standards"},
+            {"name": "Grounding & Bonding", "description": "Equipment grounding and bonding requirements"},
+            {"name": "Arc Flash Safety", "description": "Arc flash analysis, labeling, and PPE requirements"}
+          ]
+        },
+        {
+          "name": "Controls Standards",
+          "description": "PLC, HMI, and network design standards",
+          "chapters": [
+            {"name": "PLC Programming Standards", "description": "Naming conventions, structure, and best practices"},
+            {"name": "HMI Design Guidelines", "description": "Screen layout, color standards, navigation"},
+            {"name": "Network Architecture", "description": "Industrial network design and segmentation"},
+            {"name": "Cybersecurity", "description": "Industrial control system security requirements"}
+          ]
+        },
+        {
+          "name": "Documentation Standards",
+          "description": "Drawing and document standards",
+          "chapters": [
+            {"name": "Drawing Standards", "description": "Title blocks, layers, symbols, and formatting"},
+            {"name": "Naming Conventions", "description": "Tag naming, file naming, and abbreviations"},
+            {"name": "Version Control", "description": "Revision tracking and document management"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "SOPs & Procedures",
+      "description": "Standard operating procedures for field and office work",
+      "books": [
+        {
+          "name": "Field Procedures",
+          "description": "Procedures for on-site work",
+          "chapters": [
+            {"name": "Commissioning Procedures", "description": "Systematic commissioning approach"},
+            {"name": "Startup Checklists", "description": "Equipment-specific startup procedures"},
+            {"name": "Troubleshooting Guides", "description": "Common issues and diagnostic steps"},
+            {"name": "Safety Procedures", "description": "LOTO, confined space, hot work permits"}
+          ]
+        },
+        {
+          "name": "Office Procedures",
+          "description": "Procedures for office-based work",
+          "chapters": [
+            {"name": "Project Setup", "description": "Creating project folders and initial documents"},
+            {"name": "Design Review Process", "description": "Internal review and approval workflow"},
+            {"name": "Drawing Submission", "description": "Client submittal process and tracking"},
+            {"name": "Change Management", "description": "Handling design changes and scope creep"}
+          ]
+        },
+        {
+          "name": "QA/QC Checklists",
+          "description": "Quality assurance and quality control forms",
+          "chapters": [
+            {"name": "Panel Build QC", "description": "Control panel inspection checklist"},
+            {"name": "FAT Checklists", "description": "Factory Acceptance Test procedures"},
+            {"name": "SAT Checklists", "description": "Site Acceptance Test procedures"},
+            {"name": "Punch List Templates", "description": "Issue tracking and resolution forms"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Training & Development",
+      "description": "Career development tracks and competency requirements",
+      "books": [
+        {
+          "name": "Technician Development",
+          "description": "Growth path for field technicians",
+          "chapters": [
+            {"name": "Core Skills", "description": "Foundation skills for all technicians"},
+            {"name": "Safety Certifications", "description": "Required safety training and renewals"},
+            {"name": "Equipment Training", "description": "Vendor-specific equipment certifications"},
+            {"name": "Competency Checklist", "description": "Skills assessment and sign-off form"}
+          ]
+        },
+        {
+          "name": "Engineer Development",
+          "description": "Growth path for design engineers",
+          "chapters": [
+            {"name": "Design Fundamentals", "description": "Core engineering competencies"},
+            {"name": "Project Execution", "description": "From kickoff to closeout"},
+            {"name": "Client Communication", "description": "Professional communication skills"},
+            {"name": "Competency Checklist", "description": "Skills assessment and sign-off form"}
+          ]
+        },
+        {
+          "name": "Lead Engineer Development",
+          "description": "Growth path to lead engineer role",
+          "chapters": [
+            {"name": "Project Leadership", "description": "Managing projects and teams"},
+            {"name": "Team Mentorship", "description": "Developing junior engineers"},
+            {"name": "Business Development", "description": "Client relationships and proposals"},
+            {"name": "Competency Checklist", "description": "Skills assessment and sign-off form"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Reference Materials",
+      "description": "External references, vendor docs, and templates",
+      "books": [
+        {
+          "name": "Vendor Documentation",
+          "description": "Key vendor manuals and application notes",
+          "chapters": [
+            {"name": "Allen-Bradley / Rockwell", "description": "PLC, VFD, and HMI documentation"},
+            {"name": "Siemens", "description": "Drive and PLC documentation"},
+            {"name": "Schneider Electric", "description": "Power distribution and automation"},
+            {"name": "Other Vendors", "description": "Miscellaneous vendor resources"}
+          ]
+        },
+        {
+          "name": "Codes & Regulations",
+          "description": "Applicable codes and standards",
+          "chapters": [
+            {"name": "NEC References", "description": "National Electrical Code key articles"},
+            {"name": "NFPA Standards", "description": "Fire protection and safety standards"},
+            {"name": "UL Standards", "description": "Underwriters Laboratories requirements"},
+            {"name": "Industry Standards", "description": "ISA, IEEE, and other industry standards"}
+          ]
+        },
+        {
+          "name": "Templates Library",
+          "description": "Standard templates and forms",
+          "chapters": [
+            {"name": "Project Templates", "description": "Project folder structure and standard docs"},
+            {"name": "Drawing Templates", "description": "CAD templates and title blocks"},
+            {"name": "Calculation Templates", "description": "Standard calculation spreadsheets"},
+            {"name": "Report Templates", "description": "Standard report formats"}
+          ]
+        },
+        {
+          "name": "Useful Links & Resources",
+          "description": "External web resources and tools",
+          "chapters": [
+            {"name": "Online Calculators", "description": "Useful online engineering tools"},
+            {"name": "Training Resources", "description": "External training and certification links"},
+            {"name": "Industry Organizations", "description": "Professional associations and memberships"}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Project Knowledge Base",
+      "description": "Lessons learned, case studies, and institutional knowledge",
+      "books": [
+        {
+          "name": "Lessons Learned",
+          "description": "What we've learned from past projects",
+          "chapters": [
+            {"name": "Design Lessons", "description": "Design decisions and their outcomes"},
+            {"name": "Field Lessons", "description": "Installation and commissioning insights"},
+            {"name": "Client Lessons", "description": "Client management experiences"}
+          ]
+        },
+        {
+          "name": "Common Issues & Solutions",
+          "description": "Frequently encountered problems and fixes",
+          "chapters": [
+            {"name": "Electrical Issues", "description": "Common electrical problems and solutions"},
+            {"name": "Controls Issues", "description": "PLC and HMI troubleshooting"},
+            {"name": "Communication Issues", "description": "Network and protocol problems"}
+          ]
+        },
+        {
+          "name": "Project Case Studies",
+          "description": "Detailed project retrospectives",
+          "chapters": [
+            {"name": "Success Stories", "description": "What went well and why"},
+            {"name": "Challenging Projects", "description": "How we overcame difficulties"},
+            {"name": "Innovation Examples", "description": "Novel solutions and approaches"}
+          ]
+        }
+      ]
+    }
+  ],
+  "roles": [
+    {
+      "name": "Standards Authority",
+      "description": "Senior engineers who own and approve standards",
+      "permissions": [
+        "content-create-all",
+        "content-update-all",
+        "content-delete-own",
+        "attachment-create-all",
+        "attachment-update-all",
+        "attachment-delete-all",
+        "comment-create-all",
+        "comment-update-all",
+        "comment-delete-all"
+      ]
+    },
+    {
+      "name": "Lead Engineer",
+      "description": "Project leads and senior technical staff",
+      "permissions": [
+        "content-create-all",
+        "content-update-all",
+        "content-delete-own",
+        "attachment-create-all",
+        "attachment-update-own",
+        "attachment-delete-own",
+        "comment-create-all",
+        "comment-update-own",
+        "comment-delete-own"
+      ]
+    },
+    {
+      "name": "Engineer",
+      "description": "Working engineers - can edit pages and create in assigned areas",
+      "permissions": [
+        "content-create-own",
+        "content-update-own",
+        "content-delete-own",
+        "attachment-create-all",
+        "attachment-update-own",
+        "attachment-delete-own",
+        "comment-create-all",
+        "comment-update-own",
+        "comment-delete-own"
+      ]
+    },
+    {
+      "name": "Technician",
+      "description": "Field technicians - view all, edit SOPs they own",
+      "permissions": [
+        "content-create-own",
+        "content-update-own",
+        "attachment-create-all",
+        "attachment-update-own",
+        "comment-create-all",
+        "comment-update-own"
+      ]
+    },
+    {
+      "name": "New Hire",
+      "description": "Onboarding employees - view Getting Started and Training",
+      "permissions": [
+        "comment-create-all",
+        "comment-update-own"
+      ]
+    },
+    {
+      "name": "Read-Only",
+      "description": "External stakeholders - view only specific shelves",
+      "permissions": []
+    }
+  ],
+  "tags": [
+    {"name": "status:draft", "value": "Work in progress"},
+    {"name": "status:review", "value": "Awaiting review"},
+    {"name": "status:approved", "value": "Approved for use"},
+    {"name": "status:archived", "value": "No longer current"},
+    {"name": "review:required", "value": "Needs standards authority review"}
+  ]
+}

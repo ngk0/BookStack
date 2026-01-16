@@ -1,0 +1,887 @@
+/**
+ * LAPORTE Brand Theme for BookStack
+ * Version: 2.0 - Fixed readability and dark mode
+ *
+ * Official LAPORTE Color Palette:
+ * - Primary Dark Blue: #00263b
+ * - Primary Dark (hover): #001a28
+ * - Accent Golden Yellow: #E9B52D
+ * - Text Dark: #333333
+ * - Text Medium: #555555
+ * - Text Muted: #666666
+ * - Light Blue Background: #eef6f9
+ * - Light Blue Hover: #dbeef4
+ * - Border: #c8dbe3
+ * - White: #ffffff
+ */
+
+:root {
+    /* LAPORTE Brand Colors */
+    --color-primary: #00263b;
+    --color-primary-dark: #001a28;
+    --color-accent: #E9B52D;
+    --color-text: #333333;
+    --color-text-medium: #555555;
+    --color-text-muted: #666666;
+    --color-bg-light: #eef6f9;
+    --color-bg-hover: #dbeef4;
+    --color-border: #c8dbe3;
+    --color-white: #ffffff;
+}
+
+/* ============================================
+   GENERAL TEXT IMPROVEMENTS
+   ============================================ */
+
+/* Ensure body text is readable */
+body {
+    color: #333333 !important;
+}
+
+/* Entity descriptions */
+.entity-list-item-description {
+    color: #555555 !important;
+}
+
+/* Muted text should still be readable */
+.text-muted,
+.meta,
+small {
+    color: #666666 !important;
+}
+
+/* ============================================
+   HEADER & NAVIGATION
+   ============================================ */
+
+/* Main header bar */
+header#header {
+    background-color: var(--color-primary) !important;
+    border-bottom: 3px solid var(--color-accent) !important;
+}
+
+/* Header links and text */
+header#header a,
+header#header .header-links a {
+    color: var(--color-white) !important;
+}
+
+header#header a:hover,
+header#header .header-links a:hover {
+    color: var(--color-accent) !important;
+}
+
+/* Logo text */
+.header-logo a {
+    color: var(--color-white) !important;
+}
+
+/* Search bar in header */
+header .search-box input {
+    background-color: rgba(255, 255, 255, 0.15) !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
+    color: var(--color-white) !important;
+}
+
+header .search-box input::placeholder {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
+header .search-box input:focus {
+    background-color: var(--color-white) !important;
+    color: var(--color-text) !important;
+}
+
+/* ============================================
+   LEFT SIDEBAR NAVIGATION
+   ============================================ */
+
+/* Sidebar background */
+.tri-layout-left-contents,
+.sidebar {
+    background-color: var(--color-bg-light) !important;
+}
+
+/* Make sidebar text darker and more readable */
+.tri-layout-left,
+.tri-layout-left-contents {
+    color: #333333 !important;
+}
+
+/* Sidebar headings */
+.sidebar h5,
+.sidebar .h5,
+.tri-layout-left h5,
+.tri-layout-left .h5 {
+    color: var(--color-primary) !important;
+    border-bottom: 2px solid var(--color-accent) !important;
+    padding-bottom: 0.5rem;
+    font-weight: 600 !important;
+}
+
+/* Sidebar links */
+.sidebar a,
+.tri-layout-left a {
+    color: var(--color-primary) !important;
+}
+
+.sidebar a:hover,
+.tri-layout-left a:hover {
+    color: var(--color-accent) !important;
+    background-color: var(--color-bg-hover) !important;
+}
+
+/* Active sidebar item */
+.sidebar .active,
+.sidebar .selected {
+    background-color: var(--color-primary) !important;
+    color: var(--color-white) !important;
+}
+
+/* ============================================
+   RIGHT SIDEBAR (Actions Panel)
+   ============================================ */
+
+/* Right sidebar container */
+.tri-layout-right,
+.tri-layout-right-contents {
+    color: #333333 !important;
+}
+
+/* Right sidebar headings */
+.tri-layout-right h5,
+.tri-layout-right .h5 {
+    color: var(--color-primary) !important;
+    border-bottom: 2px solid var(--color-accent) !important;
+    padding-bottom: 0.5rem;
+    font-weight: 600 !important;
+}
+
+/* Right sidebar actions links */
+.tri-layout-right a,
+.actions a,
+.action-buttons a {
+    color: var(--color-primary) !important;
+}
+
+.tri-layout-right a:hover,
+.actions a:hover,
+.action-buttons a:hover {
+    color: var(--color-accent) !important;
+}
+
+/* Action icons */
+.tri-layout-right .svg-icon,
+.actions .svg-icon,
+.action-buttons .svg-icon {
+    color: var(--color-primary) !important;
+}
+
+.tri-layout-right a:hover .svg-icon,
+.actions a:hover .svg-icon,
+.action-buttons a:hover .svg-icon {
+    color: var(--color-accent) !important;
+}
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+
+/* Primary buttons */
+button.button.primary,
+a.button.primary,
+.button.primary,
+input[type="submit"].primary {
+    background-color: var(--color-primary) !important;
+    border-color: var(--color-primary) !important;
+    color: var(--color-white) !important;
+}
+
+button.button.primary:hover,
+a.button.primary:hover,
+.button.primary:hover,
+input[type="submit"].primary:hover {
+    background-color: var(--color-primary-dark) !important;
+    border-color: var(--color-primary-dark) !important;
+}
+
+/* Accent/CTA buttons */
+.button.pos,
+button.button.pos,
+a.button.pos {
+    background-color: var(--color-accent) !important;
+    border-color: var(--color-accent) !important;
+    color: var(--color-primary) !important;
+}
+
+.button.pos:hover,
+button.button.pos:hover,
+a.button.pos:hover {
+    background-color: #d4a429 !important;
+    border-color: #d4a429 !important;
+}
+
+/* Secondary/outline buttons */
+.button.outline,
+button.button.outline,
+a.button.outline {
+    border-color: var(--color-primary) !important;
+    color: var(--color-primary) !important;
+    background-color: transparent !important;
+}
+
+.button.outline:hover,
+button.button.outline:hover,
+a.button.outline:hover {
+    background-color: var(--color-primary) !important;
+    color: var(--color-white) !important;
+}
+
+/* ============================================
+   LINKS
+   ============================================ */
+
+a {
+    color: var(--color-primary);
+}
+
+a:hover {
+    color: var(--color-primary-dark);
+}
+
+/* Breadcrumb links */
+.breadcrumbs a {
+    color: var(--color-primary) !important;
+}
+
+.breadcrumbs a:hover {
+    color: var(--color-accent) !important;
+}
+
+/* ============================================
+   SHELVES, BOOKS, CHAPTERS, PAGES
+   ============================================ */
+
+/* Entity list items */
+.entity-list-item:hover {
+    background-color: var(--color-bg-light) !important;
+}
+
+/* Entity icons/colors */
+.bookshelf-icon,
+.icon-shelf {
+    color: var(--color-accent) !important;
+}
+
+.book-icon,
+.icon-book {
+    color: var(--color-primary) !important;
+}
+
+.chapter-icon,
+.icon-chapter {
+    color: #5a8f7b !important;
+}
+
+.page-icon,
+.icon-page {
+    color: var(--color-primary) !important;
+}
+
+/* Entity grid cards */
+.grid-card {
+    border-color: var(--color-border) !important;
+}
+
+.grid-card:hover {
+    border-color: var(--color-primary) !important;
+    box-shadow: 0 2px 8px rgba(0, 38, 59, 0.15) !important;
+}
+
+/* Shelf headers */
+.shelf-header {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%) !important;
+}
+
+/* ============================================
+   DROPDOWN MENUS (Light Mode)
+   ============================================ */
+
+/* Dropdown container */
+[dropdown-menu],
+.dropdown-menu,
+.popup-body {
+    background-color: #ffffff !important;
+    border: 1px solid var(--color-border) !important;
+    box-shadow: 0 4px 12px rgba(0, 38, 59, 0.15) !important;
+}
+
+/* Dropdown items */
+[dropdown-menu] a,
+.dropdown-menu a,
+.popup-body a {
+    color: #333333 !important;
+}
+
+[dropdown-menu] a:hover,
+.dropdown-menu a:hover,
+.popup-body a:hover {
+    background-color: var(--color-bg-light) !important;
+    color: var(--color-primary) !important;
+}
+
+/* Dropdown icons */
+[dropdown-menu] .svg-icon,
+.dropdown-menu .svg-icon,
+.popup-body .svg-icon {
+    color: #333333 !important;
+}
+
+[dropdown-menu] a:hover .svg-icon,
+.dropdown-menu a:hover .svg-icon,
+.popup-body a:hover .svg-icon {
+    color: var(--color-primary) !important;
+}
+
+/* ============================================
+   USER MENU
+   ============================================ */
+
+.user-menu {
+    background-color: var(--color-white) !important;
+    border-color: var(--color-border) !important;
+}
+
+.user-menu a {
+    color: #333333 !important;
+}
+
+.user-menu a:hover {
+    background-color: var(--color-bg-light) !important;
+    color: var(--color-primary) !important;
+}
+
+/* ============================================
+   TAGS
+   ============================================ */
+
+.tag-item,
+.tag {
+    background-color: var(--color-bg-light) !important;
+    border: 1px solid var(--color-border) !important;
+    color: var(--color-text) !important;
+}
+
+.tag-item:hover,
+.tag:hover {
+    background-color: var(--color-bg-hover) !important;
+    border-color: var(--color-primary) !important;
+}
+
+/* Status tags - color coding */
+.tag-item[data-name="status:approved"],
+.tag[data-name="status:approved"] {
+    background-color: #d4edda !important;
+    border-color: #28a745 !important;
+    color: #155724 !important;
+}
+
+.tag-item[data-name="status:review"],
+.tag[data-name="status:review"] {
+    background-color: #fff3cd !important;
+    border-color: var(--color-accent) !important;
+    color: #856404 !important;
+}
+
+.tag-item[data-name="status:draft"],
+.tag[data-name="status:draft"] {
+    background-color: #e9ecef !important;
+    border-color: #6c757d !important;
+    color: #495057 !important;
+}
+
+.tag-item[data-name="status:archived"],
+.tag[data-name="status:archived"] {
+    background-color: #f8d7da !important;
+    border-color: #dc3545 !important;
+    color: #721c24 !important;
+}
+
+/* ============================================
+   FORMS
+   ============================================ */
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="search"],
+textarea,
+select {
+    border-color: var(--color-border) !important;
+    color: #333333 !important;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="search"]:focus,
+textarea:focus,
+select:focus {
+    border-color: var(--color-primary) !important;
+    box-shadow: 0 0 0 2px rgba(0, 38, 59, 0.1) !important;
+}
+
+input[type="checkbox"]:checked,
+input[type="radio"]:checked {
+    accent-color: var(--color-primary) !important;
+}
+
+/* ============================================
+   TABLES
+   ============================================ */
+
+table thead {
+    background-color: var(--color-primary) !important;
+    color: var(--color-white) !important;
+}
+
+table thead th {
+    color: var(--color-white) !important;
+}
+
+table tbody tr:nth-child(even) {
+    background-color: var(--color-bg-light) !important;
+}
+
+table tbody tr:hover {
+    background-color: var(--color-bg-hover) !important;
+}
+
+/* ============================================
+   ALERTS & NOTIFICATIONS
+   ============================================ */
+
+.notification.pos,
+.alert.success {
+    background-color: #d4edda !important;
+    border-color: #28a745 !important;
+    color: #155724 !important;
+}
+
+.notification.warning,
+.alert.warning {
+    background-color: #fff3cd !important;
+    border-color: var(--color-accent) !important;
+    color: #856404 !important;
+}
+
+.notification.info,
+.alert.info {
+    background-color: var(--color-bg-light) !important;
+    border-color: var(--color-primary) !important;
+    color: var(--color-primary) !important;
+}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+
+footer {
+    background-color: var(--color-primary) !important;
+    color: var(--color-white) !important;
+}
+
+footer a {
+    color: var(--color-accent) !important;
+}
+
+footer a:hover {
+    color: var(--color-white) !important;
+}
+
+/* ============================================
+   PAGE CONTENT
+   ============================================ */
+
+.page-content h1,
+.page-content h2,
+.page-content h3 {
+    color: var(--color-primary) !important;
+}
+
+.page-content pre,
+.page-content code {
+    background-color: var(--color-bg-light) !important;
+    border-color: var(--color-border) !important;
+}
+
+.page-content blockquote {
+    border-left: 4px solid var(--color-accent) !important;
+    background-color: var(--color-bg-light) !important;
+}
+
+.page-content hr {
+    border-color: var(--color-border) !important;
+}
+
+/* ============================================
+   EDITOR
+   ============================================ */
+
+.editor-toolbar {
+    background-color: var(--color-bg-light) !important;
+    border-color: var(--color-border) !important;
+}
+
+.editor-toolbar button:hover {
+    background-color: var(--color-primary) !important;
+    color: var(--color-white) !important;
+}
+
+/* ============================================
+   LOGIN PAGE
+   ============================================ */
+
+.login-box {
+    border: 1px solid var(--color-border) !important;
+    box-shadow: 0 4px 12px rgba(0, 38, 59, 0.1) !important;
+}
+
+.login-box .primary-background {
+    background-color: var(--color-primary) !important;
+}
+
+/* ============================================
+   MISCELLANEOUS
+   ============================================ */
+
+::selection {
+    background-color: var(--color-accent) !important;
+    color: var(--color-primary) !important;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--color-bg-light);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-primary);
+}
+
+*:focus-visible {
+    outline: 2px solid var(--color-accent) !important;
+    outline-offset: 2px !important;
+}
+
+.loading-container .loading-icon {
+    color: var(--color-primary) !important;
+}
+
+/* ============================================
+   DARK MODE
+   ============================================ */
+
+/* Dark mode colors */
+:root.dark-mode {
+    --color-primary: #4a90c2;
+    --color-primary-dark: #00263b;
+    --color-accent: #E9B52D;
+    --color-text: #e0e0e0;
+    --color-text-medium: #c0c0c0;
+    --color-text-muted: #a0a0a0;
+    --color-bg-dark: #1a1a2e;
+    --color-bg-darker: #16162a;
+    --color-bg-card: #252540;
+    --color-border-dark: #3d3d5c;
+}
+
+/* Dark mode body and main containers */
+.dark-mode,
+.dark-mode body {
+    background-color: #1a1a2e !important;
+    color: #e0e0e0 !important;
+}
+
+.dark-mode .tri-layout-container {
+    background-color: #1a1a2e !important;
+}
+
+/* Dark mode left sidebar */
+.dark-mode .tri-layout-left-contents,
+.dark-mode .sidebar {
+    background-color: #16162a !important;
+    color: #e0e0e0 !important;
+}
+
+.dark-mode .tri-layout-left a,
+.dark-mode .sidebar a {
+    color: #4a90c2 !important;
+}
+
+.dark-mode .tri-layout-left a:hover,
+.dark-mode .sidebar a:hover {
+    color: #E9B52D !important;
+    background-color: #252540 !important;
+}
+
+.dark-mode .tri-layout-left h5,
+.dark-mode .sidebar h5 {
+    color: #ffffff !important;
+    border-color: #E9B52D !important;
+}
+
+/* Dark mode right sidebar */
+.dark-mode .tri-layout-right,
+.dark-mode .tri-layout-right-contents {
+    background-color: #16162a !important;
+    color: #e0e0e0 !important;
+}
+
+.dark-mode .tri-layout-right a {
+    color: #4a90c2 !important;
+}
+
+.dark-mode .tri-layout-right a:hover {
+    color: #E9B52D !important;
+}
+
+.dark-mode .tri-layout-right h5 {
+    color: #ffffff !important;
+    border-color: #E9B52D !important;
+}
+
+/* Dark mode main content area */
+.dark-mode .tri-layout-middle {
+    background-color: #1a1a2e !important;
+}
+
+.dark-mode .tri-layout-middle-contents {
+    background-color: #1a1a2e !important;
+}
+
+/* Dark mode headings */
+.dark-mode h1,
+.dark-mode h2,
+.dark-mode h3,
+.dark-mode h4,
+.dark-mode h5 {
+    color: #ffffff !important;
+}
+
+/* Dark mode entity list items */
+.dark-mode .entity-list-item {
+    border-color: #3d3d5c !important;
+}
+
+.dark-mode .entity-list-item:hover {
+    background-color: #252540 !important;
+}
+
+.dark-mode .entity-list-item-name {
+    color: #ffffff !important;
+}
+
+.dark-mode .entity-list-item-description {
+    color: #b0b0b0 !important;
+}
+
+/* Dark mode book cover colors */
+.dark-mode .entity-list-item .entity-image {
+    opacity: 0.9;
+}
+
+/* Dark mode cards */
+.dark-mode .card,
+.dark-mode .grid-card {
+    background-color: #252540 !important;
+    border-color: #3d3d5c !important;
+}
+
+.dark-mode .card:hover,
+.dark-mode .grid-card:hover {
+    border-color: #4a90c2 !important;
+}
+
+/* Dark mode dropdown menus */
+.dark-mode [dropdown-menu],
+.dark-mode .dropdown-menu,
+.dark-mode .popup-body {
+    background-color: #252540 !important;
+    border-color: #3d3d5c !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+}
+
+.dark-mode [dropdown-menu] a,
+.dark-mode .dropdown-menu a,
+.dark-mode .popup-body a {
+    color: #e0e0e0 !important;
+}
+
+.dark-mode [dropdown-menu] a:hover,
+.dark-mode .dropdown-menu a:hover,
+.dark-mode .popup-body a:hover {
+    background-color: #3d3d5c !important;
+    color: #ffffff !important;
+}
+
+.dark-mode [dropdown-menu] .svg-icon,
+.dark-mode .dropdown-menu .svg-icon {
+    color: #e0e0e0 !important;
+}
+
+/* Dark mode user menu */
+.dark-mode .user-menu {
+    background-color: #252540 !important;
+    border-color: #3d3d5c !important;
+}
+
+.dark-mode .user-menu a {
+    color: #e0e0e0 !important;
+}
+
+.dark-mode .user-menu a:hover {
+    background-color: #3d3d5c !important;
+}
+
+/* Dark mode forms */
+.dark-mode input[type="text"],
+.dark-mode input[type="email"],
+.dark-mode input[type="password"],
+.dark-mode input[type="search"],
+.dark-mode textarea,
+.dark-mode select {
+    background-color: #252540 !important;
+    border-color: #3d3d5c !important;
+    color: #e0e0e0 !important;
+}
+
+.dark-mode input[type="text"]:focus,
+.dark-mode input[type="email"]:focus,
+.dark-mode input[type="password"]:focus,
+.dark-mode input[type="search"]:focus,
+.dark-mode textarea:focus,
+.dark-mode select:focus {
+    border-color: #4a90c2 !important;
+    box-shadow: 0 0 0 2px rgba(74, 144, 194, 0.2) !important;
+}
+
+/* Dark mode tables */
+.dark-mode table {
+    background-color: #252540 !important;
+}
+
+.dark-mode table thead {
+    background-color: #00263b !important;
+}
+
+.dark-mode table tbody tr {
+    background-color: #252540 !important;
+}
+
+.dark-mode table tbody tr:nth-child(even) {
+    background-color: #1a1a2e !important;
+}
+
+.dark-mode table tbody tr:hover {
+    background-color: #3d3d5c !important;
+}
+
+.dark-mode table td,
+.dark-mode table th {
+    border-color: #3d3d5c !important;
+}
+
+/* Dark mode tags */
+.dark-mode .tag-item,
+.dark-mode .tag {
+    background-color: #252540 !important;
+    border-color: #3d3d5c !important;
+    color: #e0e0e0 !important;
+}
+
+/* Dark mode code blocks */
+.dark-mode .page-content pre,
+.dark-mode .page-content code {
+    background-color: #16162a !important;
+    border-color: #3d3d5c !important;
+    color: #e0e0e0 !important;
+}
+
+/* Dark mode blockquotes */
+.dark-mode .page-content blockquote {
+    background-color: #252540 !important;
+    border-color: #E9B52D !important;
+}
+
+/* Dark mode scrollbar */
+.dark-mode ::-webkit-scrollbar-track {
+    background: #16162a;
+}
+
+.dark-mode ::-webkit-scrollbar-thumb {
+    background: #3d3d5c;
+}
+
+.dark-mode ::-webkit-scrollbar-thumb:hover {
+    background: #4a90c2;
+}
+
+/* Dark mode buttons */
+.dark-mode .button.outline {
+    border-color: #4a90c2 !important;
+    color: #4a90c2 !important;
+}
+
+.dark-mode .button.outline:hover {
+    background-color: #4a90c2 !important;
+    color: #ffffff !important;
+}
+
+/* Dark mode muted text */
+.dark-mode .text-muted,
+.dark-mode .meta,
+.dark-mode small {
+    color: #a0a0a0 !important;
+}
+
+/* Dark mode links */
+.dark-mode a {
+    color: #4a90c2;
+}
+
+.dark-mode a:hover {
+    color: #E9B52D;
+}
+
+/* Dark mode breadcrumbs */
+.dark-mode .breadcrumbs a {
+    color: #4a90c2 !important;
+}
+
+.dark-mode .breadcrumbs a:hover {
+    color: #E9B52D !important;
+}
+
+/* Dark mode editor */
+.dark-mode .editor-toolbar {
+    background-color: #252540 !important;
+    border-color: #3d3d5c !important;
+}
+
+.dark-mode .editor-toolbar button {
+    color: #e0e0e0 !important;
+}
+
+.dark-mode .editor-toolbar button:hover {
+    background-color: #4a90c2 !important;
+}

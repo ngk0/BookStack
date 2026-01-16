@@ -1,0 +1,24 @@
+[Unit]
+Description=BookStack Hierarchy Sync
+Documentation=file:///srv/stacks/work/bookstack/CLAUDE.md
+After=network-online.target docker.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=admin
+Group=admin
+WorkingDirectory=/srv/stacks/work/bookstack/setup
+ExecStart=/srv/stacks/work/bookstack/setup/sync-hierarchy.sh
+StandardOutput=journal
+StandardError=journal
+
+# Resource limits
+MemoryMax=256M
+CPUQuota=50%
+
+# Environment
+Environment=HOME=/home/admin
+
+[Install]
+WantedBy=multi-user.target

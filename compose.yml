@@ -1,0 +1,162 @@
+# BookStack - EIC Engineering Curriculum & Standards Library
+# Stack Location: /srv/stacks/work/bookstack
+# Port: 11200 (bound to 127.0.0.1)
+# Documentation: See README.md in this directory
+#
+# SECURITY: This stack follows VPS platform conventions:
+# - Localhost-only port binding (no public access)
+# - Non-root containers (PUID/PGID 1000)
+# - Specific image versions (no :latest tags)
+# - Resource limits configured
+# - Health checks enabled
+
+services:
+  # ==========================================================================
+  # BookStack Application
+  # ==========================================================================
+  bookstack:
+    image: linuxserver/bookstack:v25.12.1-ls240
+    container_name: bookstack-app
+
+    # Environment configuration
+    # LinuxServer.io uses PUID/PGID for user mapping
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=${TZ:-America/New_York}
+      - APP_URL=${APP_URL:-http://localhost:11200}
+      - APP_KEY=${APP_KEY}
+      - APP_THEME=${APP_THEME:-}
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_USERNAME=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_DATABASE=${DB_NAME}
+      # Mail configuration (optional)
+      - MAIL_DRIVER=${MAIL_DRIVER:-log}
+      - MAIL_HOST=${MAIL_HOST:-}
+      - MAIL_PORT=${MAIL_PORT:-587}
+      - MAIL_ENCRYPTION=${MAIL_ENCRYPTION:-tls}
+      - MAIL_USERNAME=${MAIL_USERNAME:-}
+      - MAIL_PASSWORD=${MAIL_PASSWORD:-}
+      - MAIL_FROM=${MAIL_FROM:-}
+      - MAIL_FROM_NAME=${MAIL_FROM_NAME:-BookStack}
+
+    # Port binding: localhost only for security
+    # Access via SSH tunnel or Tailscale
+    ports:
+      - "127.0.0.1:11200:80"
+
+    # Persistent volumes
+    volumes:
+      - ./data/bookstack:/config
+
+    # Restart policy
+    restart: unless-stopped
+
+    # Wait for database to be healthy before starting
+    depends_on:
+      db:
+        condition: service_healthy
+
+    # Health check using BookStack's /status endpoint
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+    # Logging configuration (prevent unbounded growth)
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+    # Security options
+    security_opt:
+      - no-new-privileges:true
+
+    # Networks - default for internal DB access, proxy-net for reverse proxy
+    networks:
+      - default
+      - proxy-net
+
+  # ==========================================================================
+  # MariaDB Database
+  # ==========================================================================
+  db:
+    image: mariadb:11.4.5
+    container_name: bookstack-db
+
+    # Database configuration via environment
+    environment:
+      - MARIADB_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - MARIADB_DATABASE=${DB_NAME}
+      - MARIADB_USER=${DB_USER}
+      - MARIADB_PASSWORD=${DB_PASSWORD}
+
+    # No external port binding - only accessed by bookstack container
+    # Uncomment for direct database access during debugging:
+    # ports:
+    #   - "127.0.0.1:11201:3306"
+
+    # Persistent volume for database files
+    volumes:
+      - ./data/mariadb:/var/lib/mysql
+
+    # Restart policy
+    restart: unless-stopped
+
+    # Health check
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 512M
+
+    # Logging configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+    # Security options
+    security_opt:
+      - no-new-privileges:true
+
+    # Network
+    networks:
+      - default
+
+# ==========================================================================
+# Networks
+# ==========================================================================
+networks:
+  default:
+    driver: bridge
+  proxy-net:
+    external: true

@@ -1,0 +1,302 @@
+# BookStack Content Hierarchy
+# Edit this file to add/modify shelves, books, and chapters
+# Changes are automatically pushed to BookStack on the next sync cycle
+#
+# Format:
+#   shelves:
+#     Shelf Name:
+#       description: Shelf description
+#       books:
+#         Book Name:
+#           description: Book description
+#           chapters:
+#             Chapter Name: Chapter description
+
+shelves:
+  Getting Started:
+    description: "Onboarding hub for new team members — who we are, how we work, and how to get set up fast."
+    books:
+      Welcome to EIC:
+        description: "Team orientation: roles, structure, and how we operate."
+        chapters:
+          Team Overview and Structure: "Organization chart, roles, and reporting structure."
+          Who Does What: "Contact directory and areas of responsibility."
+          How We Work: "Ways of working, meeting cadences, and decision paths."
+          Company Culture and Values: "Expected behaviors and team norms."
+
+      Onboarding Access Tools Safety:
+        description: "Single checklist for admin setup, tools, access, and required safety training."
+        chapters:
+          HR Benefits and Policies: "Benefits enrollment, policies, time off."
+          Accounts Access and Permissions: "Email, VPN, software licenses, badge access, client portals."
+          Time Tracking and Expenses: "Timesheet system, expense reporting, mileage."
+          Communication Channels and Cadences: "Email lists, Teams channels, meeting cadences."
+          Engineering Workstation Setup: "Engineering workstation setup for EIC work (CAD, PLC software, version control as applicable)."
+          Required Software and Licenses: "AutoCAD, Studio 5000, FactoryTalk, and other required tools."
+          Safety Training Requirements: "Arc flash, OSHA, site-specific certifications."
+          First Week Checklist: "Day-by-day guide for your first week."
+
+      Find Things Fast:
+        description: "Directory of where standards, templates, and project info live."
+        chapters:
+          How to Use BookStack: "Search tips, tags, and what content lives where."
+          Shared Drive Structure: "P drive layout and folder organization."
+          Project Folder Conventions: "Standard project folder template and naming."
+          Drawing Archives and As-Builts: "Where to find historical drawings and as-built packages."
+          Software Installers and License Keys: "License server info and software installers."
+
+  EIC Standards:
+    description: "Enforced engineering standards — what we require for deliverables and designs. Client deltas live in Client Overlays."
+    books:
+      Electrical Engineering Standards:
+        description: "Enforced electrical design and installation standards."
+        chapters:
+          Power Distribution: "MCC, panelboard, and distribution design standards."
+          Motor Control: "VFD, soft starter, and DOL starter standards."
+          Grounding and Bonding: "Equipment grounding and bonding requirements."
+          Cable and Raceway: "Cable types, tray/conduit conventions, and segregation expectations."
+          Arc Flash and Labeling: "Arc flash analysis interfaces, labeling, and PPE requirements."
+
+      Controls Engineering Standards:
+        description: "Enforced controls and OT standards."
+        chapters:
+          PLC Standards: "Naming conventions, structure, and minimum programming documentation requirements."
+          HMI Standards: "Screen layout, color standards, navigation, and alarm presentation rules (as enforced)."
+          OT Network Architecture Standards: "Industrial network segmentation, redundancy, and documentation expectations."
+          Cybersecurity and Remote Access: "Minimum requirements and approval dependencies (verify with client IT)."
+          Time Synchronization and Historian Interfaces: "NTP/PTP expectations and time-source documentation (verify with client IT)."
+
+      C and I Documentation Standards:
+        description: "Enforced documentation standards for controls and instrumentation deliverables."
+        chapters:
+          Tagging and Instrumentation Conventions: "Tag format rules, suffix rules, and P&ID reference requirements."
+          Instrument Index and IO List Standards: "Required fields, enumerations, and QA expectations."
+          Loop Diagram Standards: "Minimum content, typicals, grounding/shield notation rules."
+          Termination and Marshalling Standards: "JB schedules, marshalling conventions, cable core allocation rules."
+          Panel Documentation Requirements: "Panel interface expectations, labeling, power/heat documentation."
+          Network Diagrams and Device Lists: "Diagram layering rules and device list minimum fields."
+          Narrative and Cause and Effect Traceability: "Requirement IDs, traceability matrices, and change control expectations."
+
+      Document Control and CAD Standards:
+        description: "Enforced drawing/document standards and document control expectations."
+        chapters:
+          Drawing Standards: "Title blocks, layers, symbols, formatting, and sheet conventions."
+          File Naming and Numbering: "File naming, drawing numbering, and abbreviations."
+          Revision Control and Transmittals: "Revision tracking, IFR/IFA/IFC conventions, and transmittal expectations."
+          Document Registers and Metadata: "Minimum register fields and how registers tie to deliverables."
+
+      Client Overlays:
+        description: "Client-specific delta standards; use with core standards (do not contaminate the core standard)."
+        chapters:
+          How to Use Client Overlays: "How to apply deltas, record assumptions, and manage conflicts."
+          Client Delta Template: "Template for capturing client-specific deviations from core standards."
+          Client A Deltas: "Placeholder for Client A deviations and required formats."
+          Client B Deltas: "Placeholder for Client B deviations and required formats."
+
+  Delivery System:
+    description: "How we execute projects: setup, reviews, submittals, change control, vendor integration, and field execution."
+    books:
+      Deliverables Playbooks Contractor Ready:
+        description: "Execution playbooks by deliverable family; links to standards, templates, examples, and training modules."
+        chapters:
+          Controls and Instrumentation Deliverables Playbook: "Tagging through traceability; aligns to Track 3."
+          Electrical Deliverables Playbook: "Electrical deliverables overview; aligns to Track 1."
+          Construction Turnover and Commissioning Deliverables Playbook: "Turnover dossiers, loop check packs, FAT/SAT evidence."
+          Package Interfaces Playbook: "Vendor boundaries, comms vs hardwired, IT/OT demarcations, responsibility splits."
+
+      Project Setup and Closeout:
+        description: "Standard workflow for starting and finishing projects."
+        chapters:
+          Kickoff Package and RACI: "Kickoff checklist, responsibilities, and interfaces."
+          Project Foldering and Registers: "Create folder structures, registers, and baseline documents."
+          Deliverable Planning and Milestones: "Deliverable register setup, dates, and freeze points."
+          Closeout and As-Builts: "Redlines, as-builts, turnover dossiers, and final deliverables."
+
+      Reviews Submittals and Change Control:
+        description: "Internal review gates, client submittals, RFIs, and change management."
+        chapters:
+          Review Gates and Readiness Definitions: "IFR/IFA/IFC definitions and what 'ready' means."
+          Internal Review Workflow: "How to run discipline review, resolve comments, and evidence closure."
+          Commenting Standard and Severity: "How to write actionable comments; blocker classification."
+          Client Submittal and Transmittals: "Packaging, transmittal logs, and response tracking."
+          RFI Workflow and Tracking: "How RFIs are logged, answered, and flowed back into deliverables."
+          Change Management and Scope Control: "Handling change, impact logging, and revision discipline."
+
+      Vendor Data and Package Integration:
+        description: "How vendor data is requested, reviewed, tracked, and integrated into IFC packages."
+        chapters:
+          Vendor Submittal Tracking: "Submittal register setup, due dates, and status reporting."
+          Vendor Drawing Review Workflow: "Review checklists, comment logs, and dispositions."
+          Package Boundaries and Interfaces: "Define demarcations for skids, panels, comms vs hardwired."
+          Integrating Vendor Data into IFC: "How vendor information is reconciled with project registers and drawings."
+
+      Field Execution and Commissioning Workflow:
+        description: "Field workflow for installation verification, commissioning, SAT, startup support, and turnover."
+        chapters:
+          Site Safety Essentials: "LOTO, confined space, hot work permits, site orientations."
+          Installation Verification Walkdowns: "Pre-commissioning checks, punch listing, and readiness."
+          Loop Check Workflow: "Loop checks, documentation packs, and field signoff expectations."
+          SAT Workflow: "Site acceptance test planning, execution, and evidence."
+          Startup Support Workflow: "Startup coordination, issue triage, and lessons capture."
+          Redlines and As-Built Capture: "Field redlines, markup control, and as-built updates."
+
+  Training Academy:
+    description: "Curriculum tracks, role development paths, reviewer training, and specialty technical deep dives."
+    books:
+      Track 0 Project Delivery Fundamentals:
+        description: "Curriculum track: foundations for executing EIC work (to be populated/linked)."
+        chapters:
+          Track Overview: "Purpose, prerequisites, and completion outputs."
+          Module Map: "Sequenced module list and progression guidance."
+
+      Track 1 Electrical Deliverables:
+        description: "Curriculum track: electrical deliverables and contractor-ready packages (to be populated/linked)."
+        chapters:
+          Track Overview: "Purpose, prerequisites, and completion outputs."
+          Module Map: "Sequenced module list and progression guidance."
+
+      Track 2 Electrical Interfaces and Construction Support:
+        description: "Curriculum track: electrical interfaces, construction support, and commissioning integration (to be populated/linked)."
+        chapters:
+          Track Overview: "Purpose, prerequisites, and completion outputs."
+          Module Map: "Sequenced module list and progression guidance."
+
+      Track 3 Controls and Instrumentation Deliverables:
+        description: "Curriculum track: contractor-ready controls and instrumentation deliverables (tagging through traceability)."
+        chapters:
+          Track Overview: "Purpose, prerequisites, scope, and completion outputs."
+          Module 1 From PID to EIC Tagging Scope Interfaces: "Tagging, scope boundaries, and interfaces."
+          Module 2 Instrument Index and IO List Data Model QA: "Index/IO data model, enumerations, QA checks."
+          Module 3 Loop Diagrams Typical Content Pitfalls: "Loop content, typicals, and common errors."
+          Module 4 Terminations Interconnects Marshalling JB Cable Cores: "Marshalling, JB schedules, cable core allocation."
+          Module 5 Control Panel Documentation Interfaces: "Panel requirements, power/heat/space, wiring expectations."
+          Module 6 Industrial Network Diagrams and Device Lists: "Network diagrams, device list minimums, IT standard dependencies."
+          Module 7 Cause and Effect and Narrative Traceability: "C&E, control narrative mapping, traceability matrices."
+          Module 8 Capstone Integrated Package QA and IFC Simulation: "Integrated QA evidence binder and review simulation."
+          Track Quality Gates: "Review-ready and contractor-ready gate criteria and evidence."
+          Track Completion Outputs: "Named artifacts, checklists, and reusable templates."
+
+      Role Development Designers:
+        description: "Growth path for designers with competency checklists."
+        chapters:
+          Core Skills: "Baseline skills for EIC designers."
+          Safety Certifications: "Required safety training and renewals."
+          CAD and Tool Proficiency: "CAD standards, registers, and document control practices."
+          Competency Checklist: "Skills assessment and sign-off form."
+
+      Role Development Engineers:
+        description: "Growth path for engineers with competency checklists."
+        chapters:
+          Design Fundamentals: "Core engineering competencies."
+          Project Execution: "From kickoff to closeout and review gates."
+          Client Communication: "Professional communication and expectations."
+          Competency Checklist: "Skills assessment and sign-off form."
+
+      Role Development Lead Engineers:
+        description: "Growth path to lead engineer role with expectations and signoff authority."
+        chapters:
+          Project Leadership: "Managing scope, schedule, and team."
+          Team Mentorship: "Developing junior staff and enforcing standards."
+          Business Development Support: "Client relationships and proposals support."
+          Competency Checklist: "Skills assessment and sign-off form."
+
+      Specialty Topics Deep Dives:
+        description: "Focused technical topics that cut across tracks; patterns, examples, and failure modes."
+        chapters:
+          Instrument Grounding and Shielding: "Documentation expectations, common pitfalls, and review checks."
+          Intrinsic Safety Documentation: "Barriers, segregation, loop documentation expectations (verify by licensed engineer)."
+          Control Valves and Positioners: "I/O patterns, power needs, fail action documentation."
+          Motor Control Interfaces: "Starter and VFD signals, typical point lists, and documentation interfaces."
+          OT Networking Protocols and Time Sync: "Common protocols, time sync concepts, and documentation needs."
+          Panel Thermal Management: "Estimating heat, vendor inputs, and common failure modes."
+          Brownfield Cutover Planning: "Documentation strategy and field verification practices."
+          Commissioning Documentation Packs: "Loop check packs, turnover dossiers, and evidence expectations."
+
+      Reviewer and Mentor Playbook:
+        description: "How to review IFC packages and coach teams to reduce rework and RFIs."
+        chapters:
+          How to Review IFC Packages: "Review mindset, evidence expectations, and common flags."
+          Common Review Comments by Deliverable: "Standard comment library aligned to deliverables."
+          Coaching and Feedback: "How to correct root causes, not just markup drawings."
+          Comment Resolution Workflow: "Dispositioning comments and proving closure."
+
+  Templates Examples and References:
+    description: "Reusable templates, redacted examples, and curated external references."
+    books:
+      Templates Library Internal:
+        description: "Standard templates, registers, logs, and checklists used on projects."
+        chapters:
+          Project Setup Templates: "Kickoff checklists, folder structures, deliverable registers."
+          Registers and Lists Templates: "Tag master, instrument index, IO list, cable schedules, device lists."
+          Logs and Trackers Templates: "Issue logs, interface registers, comment logs, change logs."
+          QAQC Checklists: "Review-ready and contractor-ready checklists by deliverable."
+          Calculation Worksheets: "Load lists, heat/power estimates, and common calculation sheets."
+          Report Templates: "FAT/SAT reports, turnover packages, and closeout reports."
+
+      Example Deliverables Redacted:
+        description: "Redacted examples that show 'good' vs 'bad' and what reviewers flag."
+        chapters:
+          Example Instrument Index and IO List: "Example data model with QA notes."
+          Example Loop Diagrams: "Good vs bad loop examples with shielding and power callouts."
+          Example Terminations and Marshalling: "JB schedule, marshalling schedule, cable schedule examples."
+          Example Panel Requirements Package: "Panel interface doc plus review comments example."
+          Example Network Diagram and Device List: "Diagram conventions and device list minimums."
+          Example Cause and Effect and Traceability: "C&E and traceability matrix example."
+          Example IFC Package Index and Evidence Binder: "How to package evidence for review gates."
+
+      External References Vendor Documentation:
+        description: "Curated vendor documentation links and application notes."
+        chapters:
+          Rockwell Automation: "PLC, VFD, HMI, networking references."
+          Siemens: "Drives and PLC documentation."
+          Schneider Electric: "Power distribution and automation references."
+          Other Vendors: "Miscellaneous vendor resources."
+
+      External References Codes and Industry Standards:
+        description: "Key codes and standards references; verify applicability and project requirements."
+        chapters:
+          NEC References: "Key articles and common interpretations (verify by licensed engineer)."
+          NFPA Standards: "Fire protection and safety standards."
+          UL Standards: "UL requirements relevant to panels and equipment."
+          Industry Standards: "ISA, IEEE, IEC and related standards."
+
+      Useful Links and Tools:
+        description: "External web tools, calculators, and training resources."
+        chapters:
+          Online Calculators: "Curated calculators for engineering tasks."
+          Training and Certification Links: "External training and certification resources."
+          Industry Organizations: "Professional associations and memberships."
+
+  Lessons Learned and Troubleshooting:
+    description: "Institutional knowledge: what broke, why, and how to prevent it; troubleshooting organized by symptom."
+    books:
+      RFI Prevention Library:
+        description: "Common RFIs by deliverable type and the documentation fixes that prevent them."
+        chapters:
+          RFIs from Loop Diagrams: "Common loop-related RFIs and prevention checklists."
+          RFIs from Terminations and Marshalling: "Landing point/core/shield RFIs and how to prevent."
+          RFIs from Panel Documentation: "Panel requirements and vendor interface RFIs."
+          RFIs from Network Documentation: "IT/OT alignment and device identification RFIs."
+          RFIs from Index and IO Lists: "Data model and point list RFIs."
+
+      Troubleshooting and Common Issues:
+        description: "Field and office troubleshooting guides organized by system."
+        chapters:
+          Electrical Troubleshooting: "Common electrical issues and diagnostic steps."
+          Controls Troubleshooting: "PLC, HMI, and instrumentation troubleshooting."
+          Network and Communications Troubleshooting: "Protocol, cabling, and device connectivity issues."
+          Commissioning Issue Patterns: "Recurring commissioning problems and how to avoid them."
+
+      Lessons Learned:
+        description: "Lessons learned from past projects in a consistent format."
+        chapters:
+          Design Lessons: "Design decisions and outcomes; what to repeat/avoid."
+          Field Lessons: "Installation and commissioning insights."
+          Client Lessons: "Client management and expectations."
+
+      Project Case Studies:
+        description: "Project retrospectives with artifacts and outcomes."
+        chapters:
+          Success Stories: "What went well and why."
+          Challenging Projects: "Problems encountered and how they were resolved."
+          Innovation Examples: "Novel solutions and outcomes."

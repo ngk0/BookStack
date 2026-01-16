@@ -1,0 +1,171 @@
+# Default page structure for EIC curriculum modules
+# Each chapter should contain these 7 pages in order
+#
+# This file defines the standard structure that every module chapter must follow.
+# The generate-content.sh script uses this to build prompts for LLM content generation.
+
+pages:
+  - name: "Context + What Good Looks Like"
+    order: 1
+    guidance: |
+      ## Purpose
+      Explain why this module exists in the context of contractor-ready EIC delivery.
+
+      ## What to Include
+      - Business context: Why does this matter to the project?
+      - Definition of "good": What does a successful deliverable look like?
+      - Common misconceptions about this topic
+      - Where this fits in the larger project workflow
+      - Who uses the output and how
+
+      ## Quality Bar
+      Contractor-ready, review-ready. No invented requirements.
+
+      ## Format
+      - Start with a clear problem statement
+      - Include a "What Good Looks Like" callout box
+      - Use concrete examples, not abstractions
+
+  - name: "Concepts (Deliverable-First)"
+    order: 2
+    guidance: |
+      ## Purpose
+      Core concepts tied directly to deliverables - not abstract theory.
+
+      ## What to Include
+      - Key definitions in plain language
+      - Engineering intent behind standards/codes
+      - Practical rules of thumb used by experienced engineers
+      - Explicit callouts for: Facts | Assumptions | Recommendations
+      - Reference to applicable codes (NEC articles, NFPA, UL)
+
+      ## Format Preference
+      - Use tables for comparisons and specifications
+      - Use diagrams (Mermaid) for relationships
+      - Bullet points over narrative paragraphs
+      - Include "Rule of Thumb" callout boxes
+
+  - name: "Workflow (Step-by-Step)"
+    order: 3
+    guidance: |
+      ## Purpose
+      Procedural steps for producing the deliverable from start to finish.
+
+      ## What to Include
+      - Numbered step-by-step process
+      - Decision points with clear criteria (if X then Y)
+      - Inputs required at each step
+      - Outputs/artifacts produced at each step
+      - Handoff points to other roles/disciplines
+      - Common shortcuts that experienced engineers use
+
+      ## Format
+      - Use numbered lists for sequential steps
+      - Include a Mermaid flowchart for the overall process
+      - Add checklists at key milestones
+      - Note estimated time for each major step
+
+  - name: "QA/QC + Review-Ready Gate"
+    order: 4
+    guidance: |
+      ## Purpose
+      Define what "review-ready" means and how to verify it before submission.
+
+      ## What to Include
+      - Standard of Work checklist (what must be complete)
+      - Definition of Done criteria (measurable)
+      - Self-review checklist before submission
+      - What reviewers specifically look for
+      - Common review comments and how to prevent them
+      - Red flags that will cause rejection
+
+      ## Format
+      - Use checkbox lists for all checklists
+      - Be specific and actionable (not "check for errors")
+      - Include example review markup/comments
+      - Table of common issues → how to fix
+
+  - name: "Tools + Templates"
+    order: 5
+    guidance: |
+      ## Purpose
+      Resources, templates, and tools needed for this module.
+
+      ## What to Include
+      - Template files (with P: drive paths or attachments)
+      - Calculation tools and spreadsheets
+      - Reference documents and where to find them
+      - Software required and license info
+      - Vendor resources and documentation links
+      - Online tools and calculators
+
+      ## Note
+      - If templates don't exist yet, note as "TODO: Create template for X"
+      - Include version numbers for templates
+      - Note who owns/maintains each template
+
+  - name: "Failure Modes (What Breaks in the Field)"
+    order: 6
+    guidance: |
+      ## Purpose
+      Real problems encountered and how to prevent them.
+
+      ## What to Include
+      - Top 5 recurring mistakes on this deliverable
+      - What causes RFIs and late rework
+      - Field installation issues discovered during commissioning
+      - Commissioning failures and root causes
+      - Stories/examples from actual projects (anonymized)
+
+      ## Format
+      Use a table with columns:
+      | Symptom | Root Cause | Prevention Strategy | Detection Point |
+
+      ## Tone
+      Be blunt and practical. Don't sugarcoat. Use real examples.
+      This section should make people uncomfortable enough to check their work.
+
+  - name: "Module Admin"
+    order: 7
+    guidance: |
+      ## Purpose
+      Module metadata for curriculum management and learner tracking.
+
+      ## Required Sections
+
+      ### Learning Objectives
+      Use measurable language:
+      - "Can produce..." (create a deliverable)
+      - "Can verify..." (check someone else's work)
+      - "Can identify..." (recognize issues/patterns)
+
+      ### Prerequisites
+      - Prior modules that must be completed
+      - Skills or knowledge assumed
+      - Access/tools required
+
+      ### Estimated Time
+      - Seat time (reading/watching): X hours
+      - Practice time (exercises): X hours
+      - Total: X hours
+
+      ### Artifacts Produced
+      List what the learner creates during this module
+
+      ### Assessment Criteria
+      - What "meets expectations" looks like
+      - What "below expectations" looks like
+      - What would cause a redo
+
+      ### Next Module
+      Suggested follow-on module(s)
+
+      ### Open Questions / Dependencies
+      - Gaps in this content that need SME input
+      - Dependencies on other modules or external content
+      - Items flagged for future revision
+
+      ### Revision Log
+      | Version | Date | Author | Changes |
+      |---------|------|--------|---------|
+      | v0.1    | DATE | LLM    | Initial generation |
