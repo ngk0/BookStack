@@ -34,9 +34,10 @@
    GENERAL TEXT IMPROVEMENTS
    ============================================ */
 
-/* Ensure body text is readable */
+/* Ensure body text is readable with robust font fallback stack */
 body {
     color: #333333 !important;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
 }
 
 /* Entity descriptions */
@@ -974,114 +975,242 @@ footer a:hover {
     color: #E9B52D;
 }
 
-/* Push main content down when banner is present */
-body:has(#admin-banner) {
-    padding-top: 0 !important;
-    margin-top: 0 !important;
+/* ============================================
+   ADMIN BANNER LAYOUT ADJUSTMENTS
+   ============================================
+   These styles require the CSS :has() selector to detect when
+   #admin-banner is present in the DOM and adjust layout accordingly.
+
+   Styles that depend on :has():
+   - body:has(#admin-banner) - padding/margin reset
+   - body:has(#admin-banner) header#header - fixed positioning below banner
+   - body:has(#admin-banner) #content - margin-top to clear banner+header
+   - body:has(#admin-banner) .setting-list, .container, etc. - margin reset
+   - body:has(#admin-banner) .tri-layout-container, .content-wrap - gap fix
+   - body:has(#admin-banner) header#header::before - background fill
+   - body:has(#admin-banner) editor toolbars - sticky top offset (110px)
+   - body:has(#admin-banner) editor headers - sticky positioning
+   - body:has(#admin-banner) editor content areas - padding/margin reset
+   - body:has(#admin-banner) .toolbar.page-edit-toolbar - relative position
+
+   For browsers without :has() support, a JS fallback adds the class
+   .has-admin-banner to <body> when #admin-banner is detected.
+   ============================================ */
+
+/* Fallback for browsers without :has() support.
+   The .has-admin-banner class is added via JavaScript (see <script> section). */
+@supports not selector(:has(*)) {
+    body.has-admin-banner {
+        padding-top: 0 !important;
+        margin-top: 0 !important;
+    }
+
+    body.has-admin-banner header#header {
+        position: fixed !important;
+        top: 34px !important;
+        left: 0 !important;
+        right: 0 !important;
+        width: 100% !important;
+        margin-top: 0 !important;
+        z-index: 9998 !important;
+    }
+
+    body.has-admin-banner #content {
+        margin-top: 110px !important;
+    }
+
+    body.has-admin-banner .setting-list,
+    body.has-admin-banner .container,
+    body.has-admin-banner .card.content-wrap,
+    body.has-admin-banner [class*="settings"] {
+        margin-top: 0 !important;
+    }
+
+    body.has-admin-banner .tri-layout-container,
+    body.has-admin-banner .content-wrap {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+    }
+
+    body.has-admin-banner header#header::before {
+        content: '';
+        position: absolute;
+        top: -34px;
+        left: 0;
+        right: 0;
+        height: 34px;
+        background: linear-gradient(90deg, #1a1a2e 0%, #00263b 100%);
+        z-index: -1;
+    }
+
+    body.has-admin-banner .editor-toolbar-main,
+    body.has-admin-banner .floating-toolbox,
+    body.has-admin-banner .editor-container .sticky,
+    body.has-admin-banner .page-editor .sticky,
+    body.has-admin-banner .toolbox,
+    body.has-admin-banner .form-group.collapsible,
+    body.has-admin-banner .edit-area > .sticky,
+    body.has-admin-banner [sticky-container],
+    body.has-admin-banner .sticky-top-controller {
+        top: 110px !important;
+    }
+
+    body.has-admin-banner .primary-background-light.sticky-top-controller,
+    body.has-admin-banner .form-group.sticky,
+    body.has-admin-banner .editor-toolbar,
+    body.has-admin-banner .mce-toolbar-grp,
+    body.has-admin-banner .tox-toolbar-overlord,
+    body.has-admin-banner .tox-editor-header {
+        top: 110px !important;
+        margin-top: 0 !important;
+    }
+
+    body.has-admin-banner .setting-list > .sticky,
+    body.has-admin-banner .content-wrap .sticky {
+        top: 110px !important;
+    }
+
+    body.has-admin-banner .edit-header,
+    body.has-admin-banner .page-edit-header,
+    body.has-admin-banner .editor-header,
+    body.has-admin-banner .content-wrap > .primary-background-light,
+    body.has-admin-banner .faded-small.primary-background-light,
+    body.has-admin-banner [class*="edit"] > .primary-background-light:first-child,
+    body.has-admin-banner .page-editor > div:first-child,
+    body.has-admin-banner form > .primary-background-light:first-child {
+        position: sticky !important;
+        top: 110px !important;
+        z-index: 100 !important;
+        margin-top: 0 !important;
+    }
+
+    body.has-admin-banner .page-editor,
+    body.has-admin-banner .chapter-editor,
+    body.has-admin-banner .book-editor,
+    body.has-admin-banner [class*="-edit"],
+    body.has-admin-banner .edit-content {
+        padding-top: 0 !important;
+        margin-top: 0 !important;
+    }
+
+    body.has-admin-banner .toolbar.page-edit-toolbar {
+        position: relative !important;
+        top: auto !important;
+        z-index: 100 !important;
+    }
 }
 
-body:has(#admin-banner) header#header {
-    position: fixed !important;
-    top: 34px !important;
-    left: 0 !important;
-    right: 0 !important;
-    width: 100% !important;
-    margin-top: 0 !important;
-    z-index: 9998 !important;
-}
+/* Modern browsers with :has() support */
+@supports selector(:has(*)) {
+    /* Push main content down when banner is present */
+    body:has(#admin-banner) {
+        padding-top: 0 !important;
+        margin-top: 0 !important;
+    }
 
-/* Main content wrapper needs to clear fixed header + banner */
-body:has(#admin-banner) #content {
-    margin-top: 110px !important;  /* 34px banner + ~56px header + 20px buffer */
-}
+    body:has(#admin-banner) header#header {
+        position: fixed !important;
+        top: 34px !important;
+        left: 0 !important;
+        right: 0 !important;
+        width: 100% !important;
+        margin-top: 0 !important;
+        z-index: 9998 !important;
+    }
 
-/* Settings and other admin pages - ensure content clears fixed header */
-body:has(#admin-banner) .setting-list,
-body:has(#admin-banner) .container,
-body:has(#admin-banner) .card.content-wrap,
-body:has(#admin-banner) [class*="settings"] {
-    margin-top: 0 !important;
-}
+    /* Main content wrapper needs to clear fixed header + banner */
+    body:has(#admin-banner) #content {
+        margin-top: 110px !important;  /* 34px banner + ~56px header + 20px buffer */
+    }
 
-/* Fix gap between banner and content */
-body:has(#admin-banner) .tri-layout-container,
-body:has(#admin-banner) .content-wrap {
-    margin-top: 0 !important;
-    padding-top: 0 !important;
-}
+    /* Settings and other admin pages - ensure content clears fixed header */
+    body:has(#admin-banner) .setting-list,
+    body:has(#admin-banner) .container,
+    body:has(#admin-banner) .card.content-wrap,
+    body:has(#admin-banner) [class*="settings"] {
+        margin-top: 0 !important;
+    }
 
-/* Ensure header background doesn't have gap */
-body:has(#admin-banner) header#header::before {
-    content: '';
-    position: absolute;
-    top: -34px;
-    left: 0;
-    right: 0;
-    height: 34px;
-    background: linear-gradient(90deg, #1a1a2e 0%, #00263b 100%);
-    z-index: -1;
-}
+    /* Fix gap between banner and content */
+    body:has(#admin-banner) .tri-layout-container,
+    body:has(#admin-banner) .content-wrap {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+    }
 
-/* Editor toolbar adjustments - push down sticky elements */
-body:has(#admin-banner) .editor-toolbar-main,
-body:has(#admin-banner) .floating-toolbox,
-body:has(#admin-banner) .editor-container .sticky,
-body:has(#admin-banner) .page-editor .sticky,
-body:has(#admin-banner) .toolbox,
-body:has(#admin-banner) .form-group.collapsible,
-body:has(#admin-banner) .edit-area > .sticky,
-body:has(#admin-banner) [sticky-container],
-body:has(#admin-banner) .sticky-top-controller {
-    top: 110px !important;
-}
+    /* Ensure header background doesn't have gap */
+    body:has(#admin-banner) header#header::before {
+        content: '';
+        position: absolute;
+        top: -34px;
+        left: 0;
+        right: 0;
+        height: 34px;
+        background: linear-gradient(90deg, #1a1a2e 0%, #00263b 100%);
+        z-index: -1;
+    }
 
-/* Primary form actions (Save/Cancel buttons) - sticky elements only */
-body:has(#admin-banner) .primary-background-light.sticky-top-controller,
-body:has(#admin-banner) .form-group.sticky,
-body:has(#admin-banner) .editor-toolbar,
-body:has(#admin-banner) .mce-toolbar-grp,
-body:has(#admin-banner) .tox-toolbar-overlord,
-body:has(#admin-banner) .tox-editor-header {
-    top: 110px !important;
-    margin-top: 0 !important;
-}
+    /* Editor toolbar adjustments - push down sticky elements */
+    body:has(#admin-banner) .editor-toolbar-main,
+    body:has(#admin-banner) .floating-toolbox,
+    body:has(#admin-banner) .editor-container .sticky,
+    body:has(#admin-banner) .page-editor .sticky,
+    body:has(#admin-banner) .toolbox,
+    body:has(#admin-banner) .form-group.collapsible,
+    body:has(#admin-banner) .edit-area > .sticky,
+    body:has(#admin-banner) [sticky-container],
+    body:has(#admin-banner) .sticky-top-controller {
+        top: 110px !important;
+    }
 
-/* Chapter/Book edit forms */
-body:has(#admin-banner) .setting-list > .sticky,
-body:has(#admin-banner) .content-wrap .sticky {
-    top: 110px !important;
-}
+    /* Primary form actions (Save/Cancel buttons) - sticky elements only */
+    body:has(#admin-banner) .primary-background-light.sticky-top-controller,
+    body:has(#admin-banner) .form-group.sticky,
+    body:has(#admin-banner) .editor-toolbar,
+    body:has(#admin-banner) .mce-toolbar-grp,
+    body:has(#admin-banner) .tox-toolbar-overlord,
+    body:has(#admin-banner) .tox-editor-header {
+        top: 110px !important;
+        margin-top: 0 !important;
+    }
 
-/* Page/Chapter editor - header with save button */
-body:has(#admin-banner) .edit-header,
-body:has(#admin-banner) .page-edit-header,
-body:has(#admin-banner) .editor-header,
-body:has(#admin-banner) .content-wrap > .primary-background-light,
-body:has(#admin-banner) .faded-small.primary-background-light,
-body:has(#admin-banner) [class*="edit"] > .primary-background-light:first-child,
-body:has(#admin-banner) .page-editor > div:first-child,
-body:has(#admin-banner) form > .primary-background-light:first-child {
-    position: sticky !important;
-    top: 110px !important;
-    z-index: 100 !important;
-    margin-top: 0 !important;
-}
+    /* Chapter/Book edit forms */
+    body:has(#admin-banner) .setting-list > .sticky,
+    body:has(#admin-banner) .content-wrap .sticky {
+        top: 110px !important;
+    }
 
-/* Ensure the entire page content area accounts for headers */
-body:has(#admin-banner) .page-editor,
-body:has(#admin-banner) .chapter-editor,
-body:has(#admin-banner) .book-editor,
-body:has(#admin-banner) [class*="-edit"],
-body:has(#admin-banner) .edit-content {
-    padding-top: 0 !important;
-    margin-top: 0 !important;
-}
+    /* Page/Chapter editor - header with save button */
+    body:has(#admin-banner) .edit-header,
+    body:has(#admin-banner) .page-edit-header,
+    body:has(#admin-banner) .editor-header,
+    body:has(#admin-banner) .content-wrap > .primary-background-light,
+    body:has(#admin-banner) .faded-small.primary-background-light,
+    body:has(#admin-banner) [class*="edit"] > .primary-background-light:first-child,
+    body:has(#admin-banner) .page-editor > div:first-child,
+    body:has(#admin-banner) form > .primary-background-light:first-child {
+        position: sticky !important;
+        top: 110px !important;
+        z-index: 100 !important;
+        margin-top: 0 !important;
+    }
 
-/* Page editor toolbar (Back/Draft/Save buttons) - not sticky, flows with content */
-body:has(#admin-banner) .toolbar.page-edit-toolbar {
-    position: relative !important;
-    top: auto !important;
-    z-index: 100 !important;
+    /* Ensure the entire page content area accounts for headers */
+    body:has(#admin-banner) .page-editor,
+    body:has(#admin-banner) .chapter-editor,
+    body:has(#admin-banner) .book-editor,
+    body:has(#admin-banner) [class*="-edit"],
+    body:has(#admin-banner) .edit-content {
+        padding-top: 0 !important;
+        margin-top: 0 !important;
+    }
+
+    /* Page editor toolbar (Back/Draft/Save buttons) - not sticky, flows with content */
+    body:has(#admin-banner) .toolbar.page-edit-toolbar {
+        position: relative !important;
+        top: auto !important;
+        z-index: 100 !important;
+    }
 }
 
 /* Banner action buttons (Flag, Convert) */
@@ -1361,10 +1490,38 @@ body:has(#admin-banner) .toolbar.page-edit-toolbar {
 }
 </style>
 <script>
+/* :has() CSS selector fallback - adds .has-admin-banner class to body
+   for browsers that do not support :has(). This enables the @supports not
+   selector(:has(*)) CSS rules to apply correctly. */
+(function() {
+    if (!CSS.supports('selector(:has(*))')) {
+        function applyBannerClass() {
+            if (document.getElementById('admin-banner')) {
+                document.body.classList.add('has-admin-banner');
+            }
+        }
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', applyBannerClass);
+        } else {
+            applyBannerClass();
+        }
+        // Also observe for dynamically added banner
+        var observer = new MutationObserver(function() {
+            if (document.getElementById('admin-banner')) {
+                document.body.classList.add('has-admin-banner');
+            } else {
+                document.body.classList.remove('has-admin-banner');
+            }
+        });
+        observer.observe(document.documentElement, { childList: true, subtree: true });
+    }
+})();
+
 (function() {
     // Content Generator URL and API token for proxy requests
+    // Token is injected via <meta name="cg-token"> tag (set in BookStack HEAD_CONTENT .env)
     var CG_URL = 'https://content-generator.lceic.com';
-    var CG_TOKEN = 'ead4692b69a623e2972963ee9c1bb2a662bb5d9c9fd6511d4be60c70f5c07c0a';
+    var CG_TOKEN = document.querySelector('meta[name="cg-token"]')?.getAttribute('content') || '';
     var connectionOk = false;
     var reviewQueueOpen = false;
     var reviewQueue = [];
