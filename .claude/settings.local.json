@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(./sync-hierarchy.sh:*)",
+      "Bash(sudo cp:*)",
+      "Bash(sudo systemctl daemon-reload:*)",
+      "Bash(sudo systemctl enable:*)",
+      "Bash(systemctl list-timers:*)",
+      "Bash(yq:*)",
+      "Bash(bash:*)",
+      "Bash(source ./api-helpers.sh)",
+      "Bash(check_api:*)",
+      "Bash(./apply-structure.sh:*)",
+      "Bash(/srv/stacks/work/bookstack/setup/delete-orphans.sh:*)",
+      "Bash(api_get \"/shelves/118\")",
+      "Bash(npm install:*)",
+      "Bash(xargs:*)",
+      "WebSearch",
+      "WebFetch(domain:www.bookstackapp.com)",
+      "WebFetch(domain:github.com)",
+      "Bash(git remote add:*)",
+      "Bash(git push:*)",
+      "Bash(GIT_SSH_COMMAND=\"ssh -o BatchMode=yes -o ConnectTimeout=10\" git push:*)"
+    ]
+  }
+}

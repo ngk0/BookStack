@@ -16,7 +16,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 STACK_DIR="$(dirname "$SCRIPT_DIR")"
 THEME_SRC="$SCRIPT_DIR/theme"
-THEME_DEST="$STACK_DIR/data/bookstack/themes/laporte"
+THEME_DEST="$STACK_DIR/data/bookstack/www/themes/laporte"
 
 # Colors
 RED='\033[0;31m'
