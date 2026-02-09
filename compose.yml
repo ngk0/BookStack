@@ -27,6 +27,7 @@ services:
       - APP_URL=${APP_URL:-http://localhost:11200}
       - APP_KEY=${APP_KEY}
       - APP_THEME=${APP_THEME:-}
+      - CG_BANNER_TOKEN=${CG_BANNER_TOKEN:-}
       - DB_HOST=db
       - DB_PORT=3306
       - DB_USERNAME=${DB_USER}

@@ -20,6 +20,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 OUTPUT_DIR="${PROJECT_DIR}/data/hierarchy"
 LOG_FILE="${OUTPUT_DIR}/sync.log"
+LOCK_FILE="${OUTPUT_DIR}/sync.lock"
 
 # Rate limiting (ms between API calls)
 RATE_LIMIT_MS=100
@@ -78,6 +79,18 @@ log_verbose() {
 # Ensure output directory exists
 mkdir -p "$OUTPUT_DIR"
 
+# Prevent overlapping runs (systemd timer can fire while a previous sync is still running).
+if command -v flock >/dev/null 2>&1; then
+    exec 9>"$LOCK_FILE"
+    if ! flock -n 9; then
+        # Avoid failing the unit; just log and exit.
+        echo "[$(date '+%Y-%m-%d %H:%M:%S')] Another sync is already running; exiting." >> "$LOG_FILE"
+        exit 0
+    fi
+else
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] WARNING: flock not found; cannot enforce single-instance sync." >> "$LOG_FILE"
+fi
+
 # Rotate log file if > 1MB
 if [[ -f "$LOG_FILE" ]] && [[ $(stat -f%z "$LOG_FILE" 2>/dev/null || stat -c%s "$LOG_FILE" 2>/dev/null) -gt 1048576 ]]; then
     mv "$LOG_FILE" "${LOG_FILE}.old"
@@ -99,7 +112,11 @@ set -u
 
 # Rate limit helper
 rate_limit() {
-    sleep "0.${RATE_LIMIT_MS}"
+    if [[ "${RATE_LIMIT_MS}" -le 0 ]]; then
+        return 0
+    fi
+    # sleep accepts fractional seconds; keep it portable with awk.
+    sleep "$(awk -v ms="$RATE_LIMIT_MS" 'BEGIN { printf "%.3f", ms/1000 }')"
 }
 
 # Fetch all items from a paginated endpoint
@@ -156,6 +173,10 @@ BOOKS_LIST=$(fetch_paginated "/books")
 BOOK_COUNT=$(echo "$BOOKS_LIST" | jq 'length')
 log "  Found ${BOOK_COUNT} books"
 
+# Map book ID -> slug for URL construction.
+# Page/chapter detail endpoints don't always include book_slug.
+BOOK_ID_TO_SLUG=$(echo "$BOOKS_LIST" | jq 'map({key:(.id|tostring), value:.slug}) | from_entries')
+
 log "Fetching chapters..."
 CHAPTERS_LIST=$(fetch_paginated "/chapters")
 CHAPTER_COUNT=$(echo "$CHAPTERS_LIST" | jq 'length')
@@ -171,37 +192,35 @@ log "  Found ${PAGE_COUNT} pages"
 # =============================================================================
 
 log "Fetching shelf details..."
-SHELVES_DETAILED="[]"
+SHELVES_DETAILED_FILE="$(mktemp)"
+trap 'rm -f "$SHELVES_DETAILED_FILE"' EXIT
 for shelf_id in $(echo "$SHELVES_LIST" | jq -r '.[].id'); do
     log_verbose "  Fetching shelf ${shelf_id}"
-    shelf_detail=$(fetch_item "/shelves/${shelf_id}")
-    SHELVES_DETAILED=$(echo "$SHELVES_DETAILED" | jq --argjson item "$shelf_detail" '. + [$item]')
+    fetch_item "/shelves/${shelf_id}" | jq -c '.' >> "$SHELVES_DETAILED_FILE"
 done
+SHELVES_DETAILED=$(jq -s '.' "$SHELVES_DETAILED_FILE")
+rm -f "$SHELVES_DETAILED_FILE"
 
-log "Fetching book details..."
-BOOKS_DETAILED="[]"
-for book_id in $(echo "$BOOKS_LIST" | jq -r '.[].id'); do
-    log_verbose "  Fetching book ${book_id}"
-    book_detail=$(fetch_item "/books/${book_id}")
-    BOOKS_DETAILED=$(echo "$BOOKS_DETAILED" | jq --argjson item "$book_detail" '. + [$item]')
-done
-
-log "Fetching chapter details..."
-CHAPTERS_DETAILED="[]"
-for chapter_id in $(echo "$CHAPTERS_LIST" | jq -r '.[].id'); do
-    log_verbose "  Fetching chapter ${chapter_id}"
-    chapter_detail=$(fetch_item "/chapters/${chapter_id}")
-    CHAPTERS_DETAILED=$(echo "$CHAPTERS_DETAILED" | jq --argjson item "$chapter_detail" '. + [$item]')
-done
+# Books & chapters list endpoints already include the fields we need (slug/description/priority/cover/etc).
+# Avoid N extra API calls to speed up sync and reduce flakiness.
+BOOKS_DETAILED="$BOOKS_LIST"
+CHAPTERS_DETAILED="$CHAPTERS_LIST"
 
 # Pages: fetch details to get tags and content length
 log "Fetching page details..."
-PAGES_DETAILED="[]"
+PAGES_DETAILED_FILE="$(mktemp)"
+trap 'rm -f "$PAGES_DETAILED_FILE"' EXIT
 for page_id in $(echo "$PAGES_LIST" | jq -r '.[].id'); do
     log_verbose "  Fetching page ${page_id}"
-    page_detail=$(fetch_item "/pages/${page_id}")
-    PAGES_DETAILED=$(echo "$PAGES_DETAILED" | jq --argjson item "$page_detail" '. + [$item]')
+    # Reduce payload size: compute content length and discard heavy fields.
+    fetch_item "/pages/${page_id}" | jq -c '
+        ((.html // .raw_html // .markdown // "") | length) as $len
+        | del(.html, .raw_html, .markdown, .comments)
+        | . + {content_length: $len}
+    ' >> "$PAGES_DETAILED_FILE"
 done
+PAGES_DETAILED=$(jq -s '.' "$PAGES_DETAILED_FILE")
+rm -f "$PAGES_DETAILED_FILE"
 
 # =============================================================================
 # Build Hierarchy
@@ -218,23 +237,26 @@ get_status_tag() {
 # Build pages for a chapter
 build_chapter_pages() {
     local chapter_id="$1"
-    echo "$PAGES_DETAILED" | jq --argjson cid "$chapter_id" '
-        [.[] | select(.chapter_id == $cid) | {
+    echo "$PAGES_DETAILED" | jq \
+        --argjson cid "$chapter_id" \
+        --arg bookstack_url "${BOOKSTACK_URL}" \
+        --argjson book_id_to_slug "$BOOK_ID_TO_SLUG" '
+        [.[] | select((.chapter_id // 0) == $cid) | {
             id: .id,
             slug: .slug,
             name: .name,
-            url: ("'"${BOOKSTACK_URL}"'" + "/books/" + (.book_slug // "unknown") + "/page/" + .slug),
+            url: ($bookstack_url + "/books/" + ($book_id_to_slug[(.book_id | tostring)] // "unknown") + "/page/" + .slug),
             priority: .priority,
             draft: .draft,
             template: .template,
             revision_count: .revision_count,
             editor: .editor,
             tags: .tags,
-            content_length: ((.html // "") | length),
+            content_length: (.content_length // 0),
             created_at: .created_at,
             updated_at: .updated_at,
             _llm_hints: {
-                needs_content: (((.html // "") | length) < 100),
+                needs_content: ((.content_length // 0) < 100),
                 content_type: (
                     if (.name | test("(?i)procedure|sop|how to")) then "procedural"
                     elif (.name | test("(?i)standard|spec|requirement")) then "standard"
@@ -251,23 +273,26 @@ build_chapter_pages() {
 # Build direct pages for a book (not in any chapter)
 build_book_direct_pages() {
     local book_id="$1"
-    echo "$PAGES_DETAILED" | jq --argjson bid "$book_id" '
-        [.[] | select(.book_id == $bid and .chapter_id == 0) | {
+    echo "$PAGES_DETAILED" | jq \
+        --argjson bid "$book_id" \
+        --arg bookstack_url "${BOOKSTACK_URL}" \
+        --argjson book_id_to_slug "$BOOK_ID_TO_SLUG" '
+        [.[] | select(.book_id == $bid and ((.chapter_id // 0) == 0)) | {
             id: .id,
             slug: .slug,
             name: .name,
-            url: ("'"${BOOKSTACK_URL}"'" + "/books/" + (.book_slug // "unknown") + "/page/" + .slug),
+            url: ($bookstack_url + "/books/" + ($book_id_to_slug[(.book_id | tostring)] // "unknown") + "/page/" + .slug),
             priority: .priority,
             draft: .draft,
             template: .template,
             revision_count: .revision_count,
             editor: .editor,
             tags: .tags,
-            content_length: ((.html // "") | length),
+            content_length: (.content_length // 0),
             created_at: .created_at,
             updated_at: .updated_at,
             _llm_hints: {
-                needs_content: (((.html // "") | length) < 100),
+                needs_content: ((.content_length // 0) < 100),
                 content_type: "reference"
             }
         }] | sort_by(.priority // 999)
@@ -289,19 +314,27 @@ build_book_chapters() {
         chapter_pages=$(build_chapter_pages "$chapter_id")
 
         local chapter_with_pages
-        chapter_with_pages=$(echo "$chapter" | jq --argjson pages "$chapter_pages" '{
-            id: .id,
-            slug: .slug,
-            name: .name,
-            description: .description,
-            url: ("'"${BOOKSTACK_URL}"'" + "/books/" + (.book_slug // "unknown") + "/chapter/" + .slug),
-            priority: .priority,
-            created_at: .created_at,
-            updated_at: .updated_at,
-            pages: $pages
-        }')
+        chapter_with_pages=$(
+            printf '%s\n%s\n' "$chapter" "$chapter_pages" |
+            jq -s --arg bookstack_url "${BOOKSTACK_URL}" --argjson book_id_to_slug "$BOOK_ID_TO_SLUG" '
+                .[0] as $chapter | .[1] as $pages |
+                {
+                    id: $chapter.id,
+                    slug: $chapter.slug,
+                    name: $chapter.name,
+                    description: $chapter.description,
+                    url: ($bookstack_url + "/books/" + ($book_id_to_slug[($chapter.book_id | tostring)] // "unknown") + "/chapter/" + $chapter.slug),
+                    priority: $chapter.priority,
+                    created_at: $chapter.created_at,
+                    updated_at: $chapter.updated_at,
+                    pages: $pages
+                }'
+        )
 
-        result=$(echo "$result" | jq --argjson ch "$chapter_with_pages" '. + [$ch]')
+        result=$(
+            printf '%s\n%s\n' "$result" "$chapter_with_pages" |
+            jq -s '.[0] + [.[1]]'
+        )
     done
 
     echo "$result" | jq 'sort_by(.priority // 999)'
@@ -331,21 +364,29 @@ build_shelf_books() {
         direct_pages=$(build_book_direct_pages "$book_id")
 
         local book_with_contents
-        book_with_contents=$(echo "$book" | jq --argjson chapters "$book_chapters" --argjson dpages "$direct_pages" '{
-            id: .id,
-            slug: .slug,
-            name: .name,
-            description: .description,
-            url: ("'"${BOOKSTACK_URL}"'" + "/books/" + .slug),
-            cover_url: .cover.url,
-            default_template_id: .default_template_id,
-            created_at: .created_at,
-            updated_at: .updated_at,
-            chapters: $chapters,
-            direct_pages: $dpages
-        }')
+        book_with_contents=$(
+            printf '%s\n%s\n%s\n' "$book" "$book_chapters" "$direct_pages" |
+            jq -s --arg bookstack_url "${BOOKSTACK_URL}" '
+                .[0] as $book | .[1] as $chapters | .[2] as $dpages |
+                {
+                    id: $book.id,
+                    slug: $book.slug,
+                    name: $book.name,
+                    description: $book.description,
+                    url: ($bookstack_url + "/books/" + $book.slug),
+                    cover_url: ($book.cover.url // null),
+                    default_template_id: ($book.default_template_id // null),
+                    created_at: $book.created_at,
+                    updated_at: $book.updated_at,
+                    chapters: $chapters,
+                    direct_pages: $dpages
+                }'
+        )
 
-        result=$(echo "$result" | jq --argjson bk "$book_with_contents" '. + [$bk]')
+        result=$(
+            printf '%s\n%s\n' "$result" "$book_with_contents" |
+            jq -s '.[0] + [.[1]]'
+        )
     done
 
     echo "$result"
@@ -363,18 +404,26 @@ build_shelves_hierarchy() {
         shelf_books=$(build_shelf_books "$shelf_id")
 
         local shelf_with_books
-        shelf_with_books=$(echo "$shelf" | jq --argjson books "$shelf_books" '{
-            id: .id,
-            slug: .slug,
-            name: .name,
-            description: .description,
-            url: ("'"${BOOKSTACK_URL}"'" + "/shelves/" + .slug),
-            created_at: .created_at,
-            updated_at: .updated_at,
-            books: $books
-        }')
+        shelf_with_books=$(
+            printf '%s\n%s\n' "$shelf" "$shelf_books" |
+            jq -s --arg bookstack_url "${BOOKSTACK_URL}" '
+                .[0] as $shelf | .[1] as $books |
+                {
+                    id: $shelf.id,
+                    slug: $shelf.slug,
+                    name: $shelf.name,
+                    description: $shelf.description,
+                    url: ($bookstack_url + "/shelves/" + $shelf.slug),
+                    created_at: $shelf.created_at,
+                    updated_at: $shelf.updated_at,
+                    books: $books
+                }'
+        )
 
-        result=$(echo "$result" | jq --argjson sh "$shelf_with_books" '. + [$sh]')
+        result=$(
+            printf '%s\n%s\n' "$result" "$shelf_with_books" |
+            jq -s '.[0] + [.[1]]'
+        )
     done
 
     echo "$result"
@@ -400,9 +449,13 @@ find_orphan_books() {
     '
 }
 
-# Build the complete hierarchy
-SHELVES_HIERARCHY=$(build_shelves_hierarchy)
-ORPHAN_BOOKS=$(find_orphan_books)
+# Build the complete hierarchy (write to temp files to avoid huge JSON on command line)
+SHELVES_HIERARCHY_FILE="$(mktemp)"
+ORPHAN_BOOKS_FILE="$(mktemp)"
+trap 'rm -f "$SHELVES_HIERARCHY_FILE" "$ORPHAN_BOOKS_FILE"' EXIT
+
+build_shelves_hierarchy > "$SHELVES_HIERARCHY_FILE"
+find_orphan_books > "$ORPHAN_BOOKS_FILE"
 
 # Calculate end time and duration
 END_TIME=$(date +%s%3N 2>/dev/null || echo $(($(date +%s) * 1000)))
@@ -426,8 +479,8 @@ JSON_OUTPUT=$(jq -n \
     --argjson book_count "$BOOK_COUNT" \
     --argjson chapter_count "$CHAPTER_COUNT" \
     --argjson page_count "$PAGE_COUNT" \
-    --argjson shelves "$SHELVES_HIERARCHY" \
-    --argjson orphan_books "$ORPHAN_BOOKS" \
+    --slurpfile shelves "$SHELVES_HIERARCHY_FILE" \
+    --slurpfile orphan_books "$ORPHAN_BOOKS_FILE" \
     '{
         "$schema": $schema,
         meta: {
@@ -443,8 +496,8 @@ JSON_OUTPUT=$(jq -n \
             }
         },
         hierarchy: {
-            shelves: $shelves,
-            orphan_books: $orphan_books
+            shelves: ($shelves[0] // []),
+            orphan_books: ($orphan_books[0] // [])
         },
         _llm_context: {
             organization: "EIC - Engineering Integration Company",

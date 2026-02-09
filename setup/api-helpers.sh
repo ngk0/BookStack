@@ -19,7 +19,10 @@ fi
 : "${BOOKSTACK_TOKEN_SECRET:?BOOKSTACK_TOKEN_SECRET not set}"
 
 # API base URL
-API_BASE="${BOOKSTACK_URL}/api"
+# Use an internal API URL (localhost) when provided to avoid Cloudflare/edge flakiness.
+API_HOST="${BOOKSTACK_API_URL:-$BOOKSTACK_URL}"
+API_HOST="${API_HOST%/}"
+API_BASE="${API_HOST}/api"
 
 # =============================================================================
 # Core API Functions
@@ -32,21 +35,68 @@ api_request() {
     local endpoint="$2"
     local data="${3:-}"
 
-    local curl_args=(
-        -s
-        -X "$method"
-        -H "Authorization: Token ${BOOKSTACK_TOKEN_ID}:${BOOKSTACK_TOKEN_SECRET}"
-        -H "Content-Type: application/json"
-        -H "Accept: application/json"
+    # Avoid putting API secrets in the curl command line (visible via ps/systemd status).
+    # Use a temp header file and ensure it is removed even if curl fails.
+    (
+        set -euo pipefail
+        local header_file
+        header_file=$(mktemp)
+        trap 'rm -f "$header_file"' EXIT
+
+        cat > "$header_file" <<EOF
+Authorization: Token ${BOOKSTACK_TOKEN_ID}:${BOOKSTACK_TOKEN_SECRET}
+Content-Type: application/json
+Accept: application/json
+EOF
+
+        local attempts=${BOOKSTACK_API_ATTEMPTS:-3}
+        local attempt=1
+        local response=""
+
+        while [[ $attempt -le $attempts ]]; do
+            local curl_args=(
+                -sS
+                --connect-timeout "${BOOKSTACK_API_CONNECT_TIMEOUT:-5}"
+                --max-time "${BOOKSTACK_API_MAX_TIME:-60}"
+                -X "$method"
+                -H "@$header_file"
+            )
+
+            if [[ -n "$data" ]]; then
+                curl_args+=(-d "$data")
+            fi
+
+            # If BookStack (or an edge proxy) returns an HTML error page, jq will fail later.
+            # Detect non-JSON early and retry a few times.
+            response="$(curl "${curl_args[@]}" "${API_BASE}${endpoint}" || true)"
+
+            # Trim leading whitespace and check the first character.
+            local trimmed="${response#"${response%%[![:space:]]*}"}"
+
+            local first="${trimmed:0:1}"
+
+            if [[ "$first" == "{" || "$first" == "[" ]]; then
+                printf '%s' "$response"
+                exit 0
+            fi
+
+            if [[ $attempt -lt $attempts ]]; then
+                sleep $((attempt * 2))
+                attempt=$((attempt + 1))
+                continue
+            fi
+
+            echo "ERROR: Non-JSON response from BookStack API (${method} ${endpoint})" >&2
+            echo "ERROR: API base: ${API_BASE}" >&2
+            if [[ -n "$response" ]]; then
+                echo "ERROR: Response (first 200 bytes):" >&2
+                echo "$response" | head -c 200 >&2
+                echo "" >&2
+            fi
+            exit 4
+        done
     )
-
-    if [[ -n "$data" ]]; then
-        curl_args+=(-d "$data")
-    fi
-
-    curl "${curl_args[@]}" "${API_BASE}${endpoint}"
 }
-
 # GET request
 api_get() {
     api_request GET "$1"

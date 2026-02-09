@@ -1530,15 +1530,34 @@ footer a:hover {
     var entityId = null;
     var isPageFlagged = false;
 
-    // Helper to add token to URL
     function apiUrl(path) {
-        var sep = path.indexOf('?') >= 0 ? '&' : '?';
-        return CG_URL + path + sep + 'token=' + CG_TOKEN;
+        return CG_URL + path;
     }
 
-    // Check if user is admin by looking for settings link (only visible to admins)
+    function apiFetch(path, options) {
+        var opts = options || {};
+        var headers = opts.headers;
+
+        // Use an auth header instead of URL query params to avoid token leakage via logs/referrers.
+        if (CG_TOKEN) {
+            if (headers && typeof headers.append === 'function') {
+                headers.append('x-api-key', CG_TOKEN);
+                opts.headers = headers;
+            } else {
+                opts.headers = Object.assign({}, headers || {}, { 'x-api-key': CG_TOKEN });
+            }
+        }
+
+        return fetch(apiUrl(path), opts);
+    }
+
+    // Check if user is admin.
+    // Admin status is injected server-side to prevent UI exposure for non-admin users.
     function isAdmin() {
-        return !!document.querySelector('a[href*="/settings"]');
+        if (document.querySelector('meta[name="cg-admin"][content=\"1\"]')) return true;
+        // Backward-compat: token implies admin.
+        if (document.querySelector('meta[name="cg-token"][content]')) return true;
+        return false;
     }
 
     // Check if user is logged in - multiple detection methods
@@ -1617,25 +1636,17 @@ footer a:hover {
     // Resolve entity ID via proxy API
     function resolveCurrentPage(callback) {
         var url = window.location.href;
-        var apiEndpoint = apiUrl('/api/proxy/resolve-url?url=' + encodeURIComponent(url));
-        console.log('[Banner] Resolving URL:', url);
-        console.log('[Banner] API endpoint:', apiEndpoint);
-        fetch(apiEndpoint)
-        .then(function(r) {
-            console.log('[Banner] Response status:', r.status);
-            return r.json();
-        })
+        var apiEndpoint = '/api/proxy/resolve-url?url=' + encodeURIComponent(url);
+        apiFetch(apiEndpoint)
+        .then(function(r) { return r.json(); })
         .then(function(data) {
-            console.log('[Banner] Resolved data:', data);
             if (data.type && data.id) {
                 callback(data.type, data.id, data.details);
             } else {
-                console.log('[Banner] No type/id in response');
                 callback(null, null, null);
             }
         })
-        .catch(function(err) {
-            console.error('[Banner] Could not resolve page:', err);
+        .catch(function() {
             callback(null, null, null);
         });
     }
@@ -1652,7 +1663,7 @@ footer a:hover {
 
         if (isPageFlagged) {
             // Remove the flag
-            fetch(apiUrl('/api/proxy/pages/' + pageId + '/remove-tag'), {
+            apiFetch('/api/proxy/pages/' + pageId + '/remove-tag', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name: 'review-requested' })
@@ -1679,7 +1690,7 @@ footer a:hover {
             });
         } else {
             // Add the flag
-            fetch(apiUrl('/api/proxy/pages/' + pageId + '/add-tag'), {
+            apiFetch('/api/proxy/pages/' + pageId + '/add-tag', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name: 'review-requested', value: new Date().toISOString().split('T')[0] })
@@ -1709,7 +1720,7 @@ footer a:hover {
 
     // Load review queue
     function loadReviewQueue() {
-        fetch(apiUrl('/api/proxy/search?tag=review-requested'))
+        apiFetch('/api/proxy/search?tag=review-requested')
         .then(function(r) { return r.json(); })
         .then(function(data) {
             reviewQueue = data.pages || [];
@@ -1784,7 +1795,7 @@ footer a:hover {
 
         showToast('Converting chapter to book...', '');
 
-        fetch(apiUrl('/api/proxy/chapters/' + entityId + '/to-book'), {
+        apiFetch('/api/proxy/chapters/' + entityId + '/to-book', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({})
@@ -1813,7 +1824,7 @@ footer a:hover {
         }
 
         // First, load list of books for dropdown
-        fetch(apiUrl('/api/proxy/books'))
+        apiFetch('/api/proxy/books')
         .then(function(r) { return r.json(); })
         .then(function(data) {
             var books = (data.books || []).filter(function(b) { return b.id !== entityId; });
@@ -1872,7 +1883,7 @@ footer a:hover {
     function performBookToChapterConversion(targetBookId) {
         showToast('Converting book to chapter...', '');
 
-        fetch(apiUrl('/api/proxy/books/' + entityId + '/to-chapter'), {
+        apiFetch('/api/proxy/books/' + entityId + '/to-chapter', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ targetBookId: targetBookId })
@@ -1910,6 +1921,9 @@ footer a:hover {
     });
 
     document.addEventListener('DOMContentLoaded', function() {
+        // This banner is an admin-only tool; avoid making any cross-origin calls for non-admin users.
+        if (!isAdmin()) return;
+
         var ctx = getPageContext();
         entityType = ctx ? ctx.type : null;
 
@@ -1917,7 +1931,8 @@ footer a:hover {
         createBanner(ctx, null);
 
         // Resolve entity ID via API for pages/chapters/books
-        if (ctx && (ctx.type === 'page' || ctx.type === 'chapter' || ctx.type === 'book')) {
+        var canUseProxy = !!CG_TOKEN;
+        if (canUseProxy && ctx && (ctx.type === 'page' || ctx.type === 'chapter' || ctx.type === 'book')) {
             resolveCurrentPage(function(type, id, details) {
                 if (type === 'page') {
                     pageId = id;
@@ -1944,7 +1959,7 @@ footer a:hover {
         setInterval(checkConnection, 60000);
 
         // Load review queue for admins
-        if (isAdmin()) {
+        if (canUseProxy) {
             loadReviewQueue();
         }
     });
@@ -1956,27 +1971,8 @@ footer a:hover {
         var pageUrl = encodeURIComponent(window.location.href);
         var isAdminUser = isAdmin();
 
-        // For non-admins on pages, show minimal banner with just flag button
-        if (!isAdminUser) {
-            if (ctx && ctx.type === 'page') {
-                var miniBanner = document.createElement('div');
-                miniBanner.id = 'admin-banner';
-                miniBanner.style.justifyContent = 'flex-end';
-                miniBanner.innerHTML = '<nav id="admin-banner-nav">' +
-                    '<button id="flag-review-btn" class="review-queue-btn" title="Flag this page for admin review" disabled style="opacity:0.5">Flag for Review</button>' +
-                '</nav>';
-                document.body.insertBefore(miniBanner, document.body.firstChild);
-
-                // Attach event listener (CSP-safe)
-                var flagBtn = document.getElementById('flag-review-btn');
-                if (flagBtn) {
-                    flagBtn.addEventListener('click', function() {
-                        flagForReview();
-                    });
-                }
-            }
-            return;
-        }
+        // Only show this banner for admin users.
+        if (!isAdminUser) return;
 
 
         // Admin view - full banner

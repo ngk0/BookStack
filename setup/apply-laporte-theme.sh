@@ -27,7 +27,7 @@ source "$STACK_DIR/.env"
 
 # Apply custom CSS to app-custom-head setting
 echo "1. Applying custom CSS stylesheet..."
-CSS_FILE="$SCRIPT_DIR/templates/laporte-custom-head.html"
+CSS_FILE="$SCRIPT_DIR/theme/custom-head.html"
 if [[ -f "$CSS_FILE" ]]; then
     CSS_CONTENT=$(cat "$CSS_FILE" | base64 -w 0)
     docker compose exec -T db mariadb -u "$DB_USER" -p"$DB_PASSWORD" "$DB_NAME" \

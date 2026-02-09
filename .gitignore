@@ -4,3 +4,8 @@ setup/.env.setup
 
 # Runtime data (backed up separately)
 data/
+
+# Python caches (setup scripts)
+__pycache__/
+*.pyc
+.pytest_cache/
