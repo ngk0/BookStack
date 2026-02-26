@@ -1,0 +1,204 @@
+{
+  "book_id": 361,
+  "book_name": "Basis of Design Equipment",
+  "categories": {
+    "power_distribution": {
+      "name": "Power Distribution",
+      "chapter_name": "Power Distribution Equipment",
+      "description": "Transformers, panelboards, disconnects, and wire/cable for power distribution systems",
+      "libraries": [
+        "GP_Disconnect_Library",
+        "Maddox_Transformer_Library",
+        "SquareD_Panelboard_Library"
+      ]
+    },
+    "motor_control": {
+      "name": "Motor Control",
+      "chapter_name": "Motor Control Equipment",
+      "description": "Motor starters, VFDs, soft starters, and motor control centers",
+      "libraries": [
+        "CENTERLINE2100_MCC_Library",
+        "E300_FVNR_Starter_Library",
+        "PowerFlex525_VFD_Library",
+        "PowerFlex755_VFD_Library",
+        "SMCFlex_SoftStarter_Library",
+        "VFD_Disconnect_Library"
+      ]
+    },
+    "automation_networking": {
+      "name": "Automation & Networking",
+      "chapter_name": "Automation & Networking Equipment",
+      "description": "PLCs, I/O modules, HMIs, industrial switches, and IO-Link devices",
+      "libraries": [
+        "AB_PLC_IO_Library",
+        "IFM_IOLink_Library",
+        "Stratix_Switch_Library"
+      ]
+    },
+    "infrastructure": {
+      "name": "Infrastructure",
+      "chapter_name": "Electrical Infrastructure",
+      "description": "Conduit, wire/cable, cable tray, and heat trace systems",
+      "libraries": [
+        "Conduit_Selection_Library",
+        "Eaton_BLine_CableTray_Library",
+        "Wire_Cable_Library",
+        "nVent_Raychem_HeatTrace_Library"
+      ]
+    },
+    "facility": {
+      "name": "Facility Equipment",
+      "chapter_name": "Facility & Support Equipment",
+      "description": "UPS, generators, ATS, enclosures, and electrical receptacles",
+      "libraries": [
+        "Eaton_EmergencyInverter_Library",
+        "Eaton_SmartRack_Library",
+        "Eaton_UPS_Library",
+        "Hubbell_Receptacle_Library",
+        "Kohler_Generator_ATS_Library"
+      ]
+    },
+    "safety": {
+      "name": "Safety Systems",
+      "chapter_name": "Safety & Detection Equipment",
+      "description": "Gas detection and safety monitoring systems",
+      "libraries": [
+        "MSA_GasDetection_Library"
+      ]
+    }
+  },
+  "existing_chapters": {
+    "362": {
+      "name": "Variable Frequency Drives (Allen-Bradley PowerFlex 525/755)",
+      "covers": ["PowerFlex525_VFD_Library", "PowerFlex755_VFD_Library"]
+    },
+    "365": {
+      "name": "Motor Control Centers (Allen-Bradley Centerline)",
+      "covers": ["CENTERLINE2100_MCC_Library"]
+    },
+    "367": {
+      "name": "Standby Genset / Automatic Transfer Switch (Kohler Genset/ATS)",
+      "covers": ["Kohler_Generator_ATS_Library"]
+    },
+    "1305": {
+      "name": "Fused / Non-Fused Disconnect Switches (Square-D)",
+      "covers": ["GP_Disconnect_Library", "VFD_Disconnect_Library"]
+    },
+    "1306": {
+      "name": "Panelboards (Schneider-Electric NF/NQ/I-Line)",
+      "covers": ["SquareD_Panelboard_Library"]
+    }
+  },
+  "library_metadata": {
+    "AB_PLC_IO_Library": {
+      "display_name": "Allen-Bradley PLC & I/O Systems",
+      "short_name": "AB PLC/IO",
+      "manufacturer": "Rockwell Automation"
+    },
+    "CENTERLINE2100_MCC_Library": {
+      "display_name": "CENTERLINE 2100 Motor Control Centers",
+      "short_name": "CENTERLINE MCC",
+      "manufacturer": "Rockwell Automation"
+    },
+    "Conduit_Selection_Library": {
+      "display_name": "Conduit Selection Guide",
+      "short_name": "Conduit",
+      "manufacturer": "Various"
+    },
+    "E300_FVNR_Starter_Library": {
+      "display_name": "E300 FVNR Motor Starters",
+      "short_name": "E300 FVNR",
+      "manufacturer": "Rockwell Automation"
+    },
+    "Eaton_BLine_CableTray_Library": {
+      "display_name": "Eaton B-Line Cable Tray Systems",
+      "short_name": "Cable Tray",
+      "manufacturer": "Eaton"
+    },
+    "Eaton_EmergencyInverter_Library": {
+      "display_name": "Eaton Emergency Inverters",
+      "short_name": "Emergency Inverter",
+      "manufacturer": "Eaton"
+    },
+    "Eaton_SmartRack_Library": {
+      "display_name": "Eaton SmartRack Enclosures",
+      "short_name": "SmartRack",
+      "manufacturer": "Eaton"
+    },
+    "Eaton_UPS_Library": {
+      "display_name": "Eaton UPS Systems",
+      "short_name": "UPS",
+      "manufacturer": "Eaton"
+    },
+    "GP_Disconnect_Library": {
+      "display_name": "General Purpose Disconnect Switches",
+      "short_name": "GP Disconnect",
+      "manufacturer": "Square D / Schneider Electric"
+    },
+    "Hubbell_Receptacle_Library": {
+      "display_name": "Hubbell Electrical Receptacles",
+      "short_name": "Receptacles",
+      "manufacturer": "Hubbell"
+    },
+    "IFM_IOLink_Library": {
+      "display_name": "IFM IO-Link Masters & I/O",
+      "short_name": "IO-Link",
+      "manufacturer": "IFM Electronic"
+    },
+    "Kohler_Generator_ATS_Library": {
+      "display_name": "Kohler Generators & ATS",
+      "short_name": "Generator/ATS",
+      "manufacturer": "Kohler"
+    },
+    "MSA_GasDetection_Library": {
+      "display_name": "MSA Gas Detection Systems",
+      "short_name": "Gas Detection",
+      "manufacturer": "MSA Safety"
+    },
+    "Maddox_Transformer_Library": {
+      "display_name": "Maddox Transformers",
+      "short_name": "Transformers",
+      "manufacturer": "Maddox"
+    },
+    "PowerFlex525_VFD_Library": {
+      "display_name": "PowerFlex 525 VFDs",
+      "short_name": "PF525",
+      "manufacturer": "Rockwell Automation"
+    },
+    "PowerFlex755_VFD_Library": {
+      "display_name": "PowerFlex 755 VFDs",
+      "short_name": "PF755",
+      "manufacturer": "Rockwell Automation"
+    },
+    "SMCFlex_SoftStarter_Library": {
+      "display_name": "SMC Flex Soft Starters",
+      "short_name": "Soft Starter",
+      "manufacturer": "Rockwell Automation"
+    },
+    "SquareD_Panelboard_Library": {
+      "display_name": "Square D Panelboards",
+      "short_name": "Panelboards",
+      "manufacturer": "Square D / Schneider Electric"
+    },
+    "Stratix_Switch_Library": {
+      "display_name": "Stratix Industrial Ethernet Switches",
+      "short_name": "Stratix",
+      "manufacturer": "Rockwell Automation"
+    },
+    "VFD_Disconnect_Library": {
+      "display_name": "VFD-Rated Disconnects",
+      "short_name": "VFD Disconnect",
+      "manufacturer": "Square D / Schneider Electric"
+    },
+    "Wire_Cable_Library": {
+      "display_name": "Wire & Cable Selection",
+      "short_name": "Wire/Cable",
+      "manufacturer": "Southwire, Belden, Corning"
+    },
+    "nVent_Raychem_HeatTrace_Library": {
+      "display_name": "nVent Raychem Heat Trace",
+      "short_name": "Heat Trace",
+      "manufacturer": "nVent"
+    }
+  }
+}
