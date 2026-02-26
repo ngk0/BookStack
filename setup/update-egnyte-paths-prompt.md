@@ -1,24 +1,15 @@
 # Claude Code Prompt: Update Equipment Class Egnyte Paths in Bookstack
 
 ## Task
-Scan the local filesystem for equipment documentation files and update the Bookstack pages with the actual Egnyte paths, replacing all `[PENDING]` placeholders.
+Scan the Egnyte folder for equipment documentation files and update the Bookstack pages with the actual paths, replacing all `[PENDING]` placeholders.
 
-## Step 0: Clone the Repository
+## Egnyte Folder Location
 
-First, clone the eic-equip repository to the designated path:
-
-```powershell
-cd "I:\LCC\06-Projects\9 - E&IC\BOD Equip"
-git clone https://github.com/ngk0/eic-equip.git .
+```
+I:\LCC\06-Projects\9 - E&IC\BOD Equip
 ```
 
-Or if already cloned, pull latest:
-```powershell
-cd "I:\LCC\06-Projects\9 - E&IC\BOD Equip"
-git pull
-```
-
-**Working Directory:** `I:\LCC\06-Projects\9 - E&IC\BOD Equip`
+Scan this folder for equipment documentation organized by library/manufacturer.
 
 ## Context
 There are 22 equipment class pages in Bookstack that need Egnyte file paths populated. Each page has placeholder tables for:
@@ -28,8 +19,8 @@ There are 22 equipment class pages in Bookstack that need Egnyte file paths popu
 
 ## Equipment Libraries to Map
 
-| Library Folder Name | Bookstack Page ID | Display Name |
-|---------------------|-------------------|--------------|
+| Library Name | Bookstack Page ID | Display Name |
+|--------------|-------------------|--------------|
 | AB_PLC_IO_Library | 1872 | Allen-Bradley PLC & I/O Systems |
 | CENTERLINE2100_MCC_Library | 1873 | CENTERLINE 2100 Motor Control Centers |
 | Conduit_Selection_Library | 1874 | Conduit Selection Guide |
@@ -53,44 +44,40 @@ There are 22 equipment class pages in Bookstack that need Egnyte file paths popu
 | Wire_Cable_Library | 1892 | Wire & Cable Selection |
 | nVent_Raychem_HeatTrace_Library | 1893 | nVent Raychem Heat Trace |
 
-## Step 1: Scan Equipment Library Folders
+## Step 1: Scan the Egnyte Folder
 
-Each library folder in `I:\LCC\06-Projects\9 - E&IC\BOD Equip` contains:
-- `README.md` - Library documentation
-- `Unified_Master_Selection_Table.xlsx` or similar - Selection spreadsheet
-- Possibly subfolders for datasheets, manuals, etc.
+Scan `I:\LCC\06-Projects\9 - E&IC\BOD Equip` and list all subfolders and files.
 
-Scan each library folder and note what files/folders exist.
+Look for folders matching the library names above, or manufacturer-based organization like:
+- `Allen-Bradley/` or `Rockwell/`
+- `Eaton/`
+- `Square D/` or `Schneider/`
+- `Kohler/`
+- `IFM/`
+- etc.
 
-## Step 2: Find Egnyte Documentation
+For each equipment class, find:
+- Selection spreadsheets (`.xlsx` files)
+- Datasheets folder
+- Manuals folder
+- CAD/drawings folder
+- Specifications folder
 
-Look for corresponding Egnyte folders. The Egnyte sync location is likely:
-- `C:\Users\<username>\Egnyte\`
-- Or a mapped drive like `E:\` or `Y:\`
+## Step 2: Map Paths
 
-Search for equipment documentation folders containing:
-- Datasheets
-- Manuals/Installation Guides
-- CAD blocks/symbols
-- Specifications
+For each equipment library, record the Egnyte paths found. Convert Windows paths to Egnyte web paths:
 
-Ask me where Egnyte syncs if you can't find it.
-
-## Step 3: Build Path Mapping
-
-For each equipment library, map local Egnyte paths to web URLs:
-
-Local path example:
+Windows path:
 ```
-C:\Users\joe\Egnyte\Shared\Engineering\Equipment\AB_PLC_IO\Datasheets
+I:\LCC\06-Projects\9 - E&IC\BOD Equip\Allen-Bradley\PLC_IO\Datasheets
 ```
 
-Convert to Egnyte web path:
+Egnyte path (remove drive letter, use forward slashes):
 ```
-/Shared/Engineering/Equipment/AB_PLC_IO/Datasheets
+/LCC/06-Projects/9 - E&IC/BOD Equip/Allen-Bradley/PLC_IO/Datasheets
 ```
 
-## Step 4: Update Bookstack Pages
+## Step 3: Update Bookstack Pages
 
 **API Endpoint:** `https://learn.lceic.com/api`
 
@@ -99,32 +86,28 @@ Convert to Egnyte web path:
 Authorization: Token NdkVs6LLfMdCZjzA34MdNjRoIG2n6ITr:NQEY7UeIROLGGFGnEC5UjTfPcLlpuYF1
 ```
 
-**Process for each page:**
-1. `GET /api/pages/{id}` - Get current content
-2. Replace `**[PENDING]**` with actual Egnyte paths
+**For each page:**
+1. `GET /api/pages/{id}` - Get current markdown content
+2. Replace each `**[PENDING]**` with the actual Egnyte path
 3. `PUT /api/pages/{id}` with `{"markdown": "<updated content>"}`
 
-## Step 5: Link Format
+## Step 4: Path Format in Markdown
 
-Use this format in markdown tables:
+Use this format in the tables:
 ```markdown
-| Master Selection Table | `/Shared/Engineering/Equipment/AB_PLC_IO/Selection_Table.xlsx` |
-| Datasheets | `/Shared/Engineering/Equipment/AB_PLC_IO/Datasheets/` |
-```
-
-Or with clickable links:
-```markdown
-| Datasheets | [Open Folder](https://laporte.egnyte.com/app/index.do#storage/files/1/Shared/Engineering/Equipment/AB_PLC_IO/Datasheets) |
+| Master Selection Table | `/LCC/06-Projects/9 - E&IC/BOD Equip/Allen-Bradley/PLC_IO/Selection_Table.xlsx` |
+| Datasheets | `/LCC/06-Projects/9 - E&IC/BOD Equip/Allen-Bradley/PLC_IO/Datasheets/` |
 ```
 
 ## Output
 
-Provide summary:
-- Pages updated
-- Equipment classes with missing documentation
-- Any errors
+After completing, provide:
+- Number of pages updated
+- List of equipment classes where documentation was NOT found
+- Any errors encountered
 
 ## Notes
 
-- Leave as `**[PENDING]**` if documentation doesn't exist yet
-- The repo path is: `I:\LCC\06-Projects\9 - E&IC\BOD Equip`
+- If a folder/file doesn't exist for an equipment class, leave it as `**[PENDING]**`
+- Use forward slashes in paths for consistency
+- The Egnyte root is: `I:\LCC\06-Projects\9 - E&IC\BOD Equip`
