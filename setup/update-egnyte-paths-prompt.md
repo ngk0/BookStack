@@ -3,6 +3,23 @@
 ## Task
 Scan the local filesystem for equipment documentation files and update the Bookstack pages with the actual Egnyte paths, replacing all `[PENDING]` placeholders.
 
+## Step 0: Clone the Repository
+
+First, clone the eic-equip repository to the designated path:
+
+```powershell
+cd "I:\LCC\06-Projects\9 - E&IC\BOD Equip"
+git clone https://github.com/ngk0/eic-equip.git .
+```
+
+Or if already cloned, pull latest:
+```powershell
+cd "I:\LCC\06-Projects\9 - E&IC\BOD Equip"
+git pull
+```
+
+**Working Directory:** `I:\LCC\06-Projects\9 - E&IC\BOD Equip`
+
 ## Context
 There are 22 equipment class pages in Bookstack that need Egnyte file paths populated. Each page has placeholder tables for:
 - Selection Spreadsheets (Master Selection Table, Quick Reference Guide)
@@ -36,97 +53,78 @@ There are 22 equipment class pages in Bookstack that need Egnyte file paths popu
 | Wire_Cable_Library | 1892 | Wire & Cable Selection |
 | nVent_Raychem_HeatTrace_Library | 1893 | nVent Raychem Heat Trace |
 
-## Step 1: Find the Egnyte Root
+## Step 1: Scan Equipment Library Folders
 
-First, locate where Egnyte syncs on this Windows PC. Common locations:
+Each library folder in `I:\LCC\06-Projects\9 - E&IC\BOD Equip` contains:
+- `README.md` - Library documentation
+- `Unified_Master_Selection_Table.xlsx` or similar - Selection spreadsheet
+- Possibly subfolders for datasheets, manuals, etc.
+
+Scan each library folder and note what files/folders exist.
+
+## Step 2: Find Egnyte Documentation
+
+Look for corresponding Egnyte folders. The Egnyte sync location is likely:
 - `C:\Users\<username>\Egnyte\`
-- `E:\Egnyte\`
-- Check for mounted Egnyte drive letters
+- Or a mapped drive like `E:\` or `Y:\`
 
-Ask me where the Egnyte sync folder is located if you can't find it.
+Search for equipment documentation folders containing:
+- Datasheets
+- Manuals/Installation Guides
+- CAD blocks/symbols
+- Specifications
 
-## Step 2: Locate Equipment Documentation
-
-Look for equipment documentation folders. Likely structures:
-- `<Egnyte>/Shared/Engineering/Equipment/`
-- `<Egnyte>/Shared/E&IC/Equipment Libraries/`
-- `<Egnyte>/Private/<company>/Equipment/`
-
-For each equipment class, look for subfolders containing:
-- `*.xlsx` files (selection tables)
-- `Datasheets/` folder
-- `Manuals/` folder
-- `CAD/` or `Drawings/` folder
-- `Specs/` or `Specifications/` folder
+Ask me where Egnyte syncs if you can't find it.
 
 ## Step 3: Build Path Mapping
 
-For each equipment library, record the Egnyte web paths. Convert local paths like:
+For each equipment library, map local Egnyte paths to web URLs:
+
+Local path example:
 ```
 C:\Users\joe\Egnyte\Shared\Engineering\Equipment\AB_PLC_IO\Datasheets
 ```
-To Egnyte web paths like:
-```
-https://laporte.egnyte.com/navigate/folder/<folder-id>
-```
-Or simple folder paths like:
+
+Convert to Egnyte web path:
 ```
 /Shared/Engineering/Equipment/AB_PLC_IO/Datasheets
 ```
 
 ## Step 4: Update Bookstack Pages
 
-Use the Bookstack API to update each page. 
-
 **API Endpoint:** `https://learn.lceic.com/api`
 
-**Authentication:** Token-based
+**Authentication:**
 ```
-Authorization: Token <TOKEN_ID>:<TOKEN_SECRET>
-```
-
-**To update a page:**
-```
-PUT /api/pages/{id}
-Content-Type: application/json
-
-{
-  "markdown": "<updated markdown content>"
-}
+Authorization: Token NdkVs6LLfMdCZjzA34MdNjRoIG2n6ITr:NQEY7UeIROLGGFGnEC5UjTfPcLlpuYF1
 ```
 
-**Process:**
-1. GET the current page content: `GET /api/pages/{id}`
-2. Replace `**[PENDING]**` with actual paths in the markdown
-3. PUT the updated content back
+**Process for each page:**
+1. `GET /api/pages/{id}` - Get current content
+2. Replace `**[PENDING]**` with actual Egnyte paths
+3. `PUT /api/pages/{id}` with `{"markdown": "<updated content>"}`
 
-## Step 5: Format for Egnyte Links
+## Step 5: Link Format
 
-Use this format in the markdown tables:
+Use this format in markdown tables:
 ```markdown
-| Master Selection Table | [View in Egnyte](https://laporte.egnyte.com/navigate/folder/xxxxx) |
+| Master Selection Table | `/Shared/Engineering/Equipment/AB_PLC_IO/Selection_Table.xlsx` |
+| Datasheets | `/Shared/Engineering/Equipment/AB_PLC_IO/Datasheets/` |
 ```
-Or if using folder paths:
+
+Or with clickable links:
 ```markdown
-| Datasheets | `/Shared/Engineering/Equipment/AB_PLC_IO/Datasheets` |
-```
-
-## Bookstack API Credentials
-
-```
-BOOKSTACK_URL=https://learn.lceic.com
-BOOKSTACK_TOKEN_ID=NdkVs6LLfMdCZjzA34MdNjRoIG2n6ITr
-BOOKSTACK_TOKEN_SECRET=NQEY7UeIROLGGFGnEC5UjTfPcLlpuYF1
+| Datasheets | [Open Folder](https://laporte.egnyte.com/app/index.do#storage/files/1/Shared/Engineering/Equipment/AB_PLC_IO/Datasheets) |
 ```
 
 ## Output
 
-After completing, provide a summary:
-- Number of pages updated
-- Any equipment classes where files were not found
-- Any errors encountered
+Provide summary:
+- Pages updated
+- Equipment classes with missing documentation
+- Any errors
 
 ## Notes
 
-- If a documentation folder doesn't exist for an equipment class, leave it as `[PENDING]` or mark as `[NOT FOUND]`
-- Prefer Egnyte web links over local file paths
+- Leave as `**[PENDING]**` if documentation doesn't exist yet
+- The repo path is: `I:\LCC\06-Projects\9 - E&IC\BOD Equip`
